@@ -2,46 +2,46 @@
 const TEXTURE_PACK_1 = {
     background: {
         size: [798, 1000],
-        url: './resources/textures/fon.png'
+        url: './textures/fon.png'
     },
 
     rubbishIcon: {
-        url: './resources/textures/ikonka_musor.png',
+        url: './textures/ikonka_musor.png',
         size: [67, 60]
     },
 
 
     fishIcon: {
-        url: './resources/textures/ikonka_ryby.png',
+        url: './textures/ikonka_ryby.png',
         size: [67, 60]
     },
 
     badItems: [
         {
-            url_show: './resources/textures/dokhlaya_ryba11.png',
-            url_default: './resources/textures/dokhlaya_ryba1.png',
+            url_show: './textures/dokhlaya_ryba11.png',
+            url_default: './textures/dokhlaya_ryba1.png',
             size: [143, 69]
         },
         {
-            url_show: './resources/textures/sgustok1.png',
-            url_default: './resources/textures/sgustok11.png',
+            url_show: './textures/sgustok1.png',
+            url_default: './textures/sgustok11.png',
             size: [148, 48]
         },
         {
-            url_show: './resources/textures/sgustok2.png',
-            url_default: './resources/textures/sgustok21.png',
+            url_show: './textures/sgustok2.png',
+            url_default: './textures/sgustok21.png',
             size: [153, 35]
         },
         {
-            url_show: './resources/textures/sgustok3.png',
-            url_default: './resources/textures/sgustok31.png',
+            url_show: './textures/sgustok3.png',
+            url_default: './textures/sgustok31.png',
             size: [108, 55]
         }
     ],
     goodItems: [
         {
-            url_show: './resources/textures/zhivaya_ryba.png',
-            url_default: './resources/textures/zhivaya_ryba1.png',
+            url_show: './textures/zhivaya_ryba.png',
+            url_default: './textures/zhivaya_ryba1.png',
             size: [128, 60]
         }
     ],
@@ -60,49 +60,49 @@ const TEXTURE_PACK_1 = {
 
     factory: [
         {
-            url_inactive: './resources/textures/zavod2_ne_rabotaet.png',
-            url_active: './resources/textures/zavod2.png',
+            url_inactive: './textures/zavod2_ne_rabotaet.png',
+            url_active: './textures/zavod2.png',
             size: [239, 216],
             position: [30, 80],
             trumpet: {
-                url_fixed: './resources/textures/truba22.png',
-                url_broken: './resources/textures/truba2.png',
+                url_fixed: './textures/truba22.png',
+                url_broken: './textures/truba2.png',
                 size: [112, 117],
                 position: [180, 230]
             }
         },
         {
-            url_inactive: './resources/textures/zavod1_ne_rabotaet.png',
-            url_active: './resources/textures/zavod1.png',
+            url_inactive: './textures/zavod1_ne_rabotaet.png',
+            url_active: './textures/zavod1.png',
             size: [235, 181],
             position: [464, 27],
             trumpet: {
-                url_fixed: './resources/textures/truba11.png',
-                url_broken: './resources/textures/truba1.png',
+                url_fixed: './textures/truba11.png',
+                url_broken: './textures/truba1.png',
                 size: [90, 114],
                 position: [641, 109]
             }
         },
         {
-            url_inactive: './resources/textures/zavod3_ne_rabotaet.png',
-            url_active: './resources/textures/zavod3.png',
+            url_inactive: './textures/zavod3_ne_rabotaet.png',
+            url_active: './textures/zavod3.png',
             size: [233, 266],
             position: [564, 647],
             trumpet: {
-                url_fixed: './resources/textures/truba3.png',
-                url_broken: './resources/textures/truba33.png',
+                url_fixed: './textures/truba3.png',
+                url_broken: './textures/truba33.png',
                 size: [143, 158],
                 position: [485, 709]
             }
         },
         {
-            url_inactive: './resources/textures/zavod4_ne_rabotaet.png',
-            url_active: './resources/textures/zavod4.png',
+            url_inactive: './textures/zavod4_ne_rabotaet.png',
+            url_active: './textures/zavod4.png',
             size: [261, 225],
             position: [308, 783],
             trumpet: {
-                url_fixed: './resources/textures/truba4.png',
-                url_broken: './resources/textures/truba44.png',
+                url_fixed: './textures/truba4.png',
+                url_broken: './textures/truba44.png',
                 size: [143, 158],
                 position: [210, 777]
             }
