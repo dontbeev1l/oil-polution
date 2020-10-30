@@ -423,6 +423,7 @@ class OilGame {
         const RENDERED_POINTS = [];
 
         const addOil = (point) => {
+            // point = [0, 0]
             let OIL_SIZE_SCALE_COEF = random(6, 10) / 10;
             let timeout;
             const itemIndex = random(this.currentTextures.badItems.length - 1);
@@ -435,10 +436,12 @@ class OilGame {
             spritesForClear.push(oil);
 
 
-            RENDERED_POINTS.push(RENDERED_POINTS);
+        
 
-            oil.x = (point[0]  - textureSize[0] / 2) * this.scaleCoef();
-            oil.y = (point[1] - textureSize[1] / 2) * this.scaleCoef();
+            RENDERED_POINTS.push(point);
+
+            oil.x = point[0] * this.scaleCoef();
+            oil.y = point[1]  * this.scaleCoef();
 
 
             oil.width =  textureSize[0] * this.scaleCoef() * OIL_SIZE_SCALE_COEF * 0;
@@ -482,7 +485,25 @@ class OilGame {
                 if (!oil._destroyed) {
                     oil.texture = defaultTexture;
                 }
-            }, 1700)
+
+                const animationTick = (startTime) => {
+                    if (oil._destroyed) { return; }
+                    let time = Date.now() - startTime;
+
+                    oil.width =  textureSize[0] * this.scaleCoef() * OIL_SIZE_SCALE_COEF * (1 - time / animationDuration);
+                    oil.height = textureSize[1] * this.scaleCoef() * OIL_SIZE_SCALE_COEF * (1 - time / animationDuration);
+
+                    if (time > animationDuration) { time = animationDuration; }
+
+                    if (time < animationDuration) {
+                        requestAnimationFrame(() => animationTick(startTime))
+                    }
+
+                }
+
+                animationTick(Date.now());
+
+            }, 4000 - animationDuration)
         }
 
         const addFish = () => {
@@ -497,14 +518,16 @@ class OilGame {
 
             spritesForClear.push(fish);
 
+            fish.anchor.set(0.5);
+
             const point = Geometry.randomPointInPath(this.currentTextures.riverPath);
 
-            fish.x = (point[0]  - textureSize[0] / 2) * this.scaleCoef();
-            fish.y = (point[1] - textureSize[1] / 2) * this.scaleCoef();
+            fish.x = (point[0]) * this.scaleCoef();
+            fish.y = (point[1]) * this.scaleCoef();
 
 
-            fish.width =  textureSize[0] * this.scaleCoef()
-            fish.height = textureSize[1] * this.scaleCoef()
+            fish.width =  textureSize[0] * this.scaleCoef() * 0;
+            fish.height = textureSize[1] * this.scaleCoef() * 0;
 
             fish.interactive = true;
 
@@ -517,20 +540,33 @@ class OilGame {
 
             this.pixiApp.stage.addChild(fish);
 
+            let animationDuration = 200;
+
+            const animationTick = (startTime) => {
+                if (fish._destroyed) { return; }
+                let time = Date.now() - startTime;
+
+                fish.width =  textureSize[0] * this.scaleCoef() * time / animationDuration;
+                fish.height = textureSize[1] * this.scaleCoef() * time / animationDuration;
+
+                if (time > animationDuration) { time = animationDuration; }
+
+                if (time < animationDuration) {
+                    requestAnimationFrame(() => animationTick(startTime))
+                }
+
+            }
+
+            animationTick(Date.now());
+
             timeout = setTimeout(() => {
+                if (fish._destroyed) { return; }
                 fish.destroy({ children: true, texture: false, baseTexture: false});
             }, 1800)
-
-            setTimeout(() => {
-                if (!fish._destroyed) {
-                    fish.texture = defaultTexture;
-                }
-            }, 300)
         }
 
         factories = this.currentTextures.factory.map(f => new Factory(f));
         factories.forEach(f => f.drow(this.pixiApp).setPositionAndSize(this.scaleCoef()));
-
 
         const tick = () => {
             let complexity = 1;
@@ -543,7 +579,7 @@ class OilGame {
 
             nextTickDelay -= complexity * 100;
 
-            addOil( Geometry.randomPointInPath(this.currentTextures.riverPath, RENDERED_POINTS, 60));
+            addOil( Geometry.randomPointInPath(this.currentTextures.riverPath, RENDERED_POINTS, 90));
 
             if (random(100) < 20) {
                 addFish();
@@ -609,19 +645,21 @@ class Geometry {
             }
 
             nearExcludePoints = excludePoints.filter(p => Geometry.length(p, point) < excludeRadius).length > 0;
-            if (tryCount > 100) {
+            if (tryCount > 50) {
                 nearExcludePoints = false;
             }
 
-        } while (!Geometry.isPointInPath(path, point) && !nearExcludePoints && tryCount < 100);
-        if (tryCount > 100) {
+        } while (!(Geometry.isPointInPath(path, point) && !nearExcludePoints));
+
+        if (tryCount > 50) {
             console.warn('Randow point too hard')
         }
         return point; 
     }
 
     static length(point1, point2) {
-        return Math.sqrt(Math.pow(point1[0] - point2[0], 2) + Math.pow(point1[1] - point2[1], 2));
+        const l =  Math.sqrt(Math.pow(point1[0] - point2[0], 2) + Math.pow(point1[1] - point2[1], 2));
+        return l;
     }
 
     static randomPointInRect(point1, point2) {
