@@ -248,7 +248,7 @@ class OilGame {
 
         this.pixiApp = new PIXI.Application({
             view: canvas,
-            backgroundColor: 0xff0000,
+            backgroundColor: 0x6b841a,
             width: this.containerWidth(),
             height: this.calculateByPropotrion(this.containerWidth(), this.currentTextures.background.size[0], this.currentTextures.background.size[1])
         });
