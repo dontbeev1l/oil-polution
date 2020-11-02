@@ -158,7 +158,9 @@ class Factory {
 
     destroy() {
         this.factory.destroy({ children: true, texture: true, baseTexture: true})
+        this.factoryActiveLayer.destroy({ children: true, texture: true, baseTexture: true})
         this.trumpet.destroy({ children: true, texture: true, baseTexture: true})
+        this.trumpetActiveLayer.destroy({ children: true, texture: true, baseTexture: true})
 
         this.timeouts.forEach((t) => clearTimeout(t));
         return this;
@@ -789,7 +791,7 @@ new OilGame(document.getElementsByClassName('container')[0], document.getElement
 // DEBUG SEttings = 
 (() => {
     try {
-        saved = JSON.parselocalStorage.getItem('OIL_GAME_SETTINGS');
+        saved = JSON.parse(localStorage.getItem('OIL_GAME_SETTINGS'));
 
         Object.keys(saved).forEach((k) => {
             SETTINGS[k] = saved[k];
