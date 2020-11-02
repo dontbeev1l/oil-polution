@@ -124,7 +124,9 @@ function random(to, from) {
 }
 
 class Factory {
-    constructor(textures) {
+    constructor(textures, settings) {
+        this.settings = settings;
+
         this.timeouts = [];
         this.textures = textures;
         this.factoryInactiveTexture = PIXI.Texture.from(textures.url_inactive);
@@ -156,18 +158,18 @@ class Factory {
     }
 
     addClickEvents() {
-        let factorClickCount = 0;
+        let factoryClickCount = 0;
         this.factory.interactive = true;
         this.factory.on('pointerdown', () => {
             if (this.active) {
-                factorClickCount ++;
-                if (factorClickCount >= 5) {
-                    factorClickCount = 0;
+                factoryClickCount ++;
+                if (factoryClickCount >= this.settings.factoryClickCount) {
+                    factoryClickCount = 0;
                     this.deactivate();
 
                     this.timeouts.push(setTimeout(() => {
                         this.activate()
-                    }, random(4, 10) * 1000))
+                    }, random(this.reopenFactoryDelayFrom, this.reopenFactoryDelayTo) * 1000))
                 }
             }
         })
@@ -178,13 +180,13 @@ class Factory {
         this.trumpet.on('pointerdown', () => {
             if (this.broken) {
                 trumpetClickCount ++;
-                if (trumpetClickCount >= 3) {
+                if (trumpetClickCount >= this.settings.trumpetClickCount) {
                     trumpetClickCount = 0;
                     this.fix();
 
                     this.timeouts.push(setTimeout(() => {
                         this.broke()
-                    }, random(4, 10) * 1000))
+                    }, random(this.reopenTrumpetDelayFrom, this.reopenTrumpetDelayTo) * 1000))
                 }
             }
         })
@@ -240,7 +242,10 @@ class Factory {
 }
 
 class OilGame {
-    constructor(container, canvas) {
+    constructor(container, canvas, settings) {
+        this.settings = settings;
+
+
         this.currentTextures = TEXTURE_PACK_1;
 
         this._container = container;
@@ -301,15 +306,12 @@ class OilGame {
     }
 
     startGame() {
-        const maxBadCount = 92;
-        const maxFishCount = 3;
-        
         const timeoutsForGameover = [];
         const spritesForClear = [];
         const intervalForGameover = [];
         const fnForGameOver = [];
         
-        let fishCount = maxFishCount;
+        let fishCount = 0;
 
         let badcount = 0;
 
@@ -338,10 +340,6 @@ class OilGame {
             fnForGameOver.forEach((fn) => fn());
 
             this.renderMenu();
-        }
-
-        const renderStat = () => {
-            
         }
 
         //  add Stat
@@ -410,12 +408,12 @@ class OilGame {
 
         const updateStat = () => {
             if (rubbishText._destroyed) { return; }
-            rubbishText.text = Math.round(badcount / maxBadCount * 100).toString() + '%';
-            fishText.text = Math.round(fishCount / maxFishCount * 100).toString() + '%';
+            rubbishText.text = Math.round(badcount / this.settings.badCountToLose * 100).toString() + '%';
+            fishText.text = Math.round((this.settings.fishCountToLose - fishCount) / this.settings.fishCountToLose * 100).toString() + '%';
             fishSprite.x = rubbishText.x + rubbishText.width + STAT_MARGIN * 2 * this.scaleCoef();
             fishText.x = fishSprite.x + fishSprite.width + STAT_MARGIN * this.scaleCoef();
             
-            if (fishCount <= 0 || badcount >= maxBadCount) {
+            if (fishCount >= this.settings.fishCountToLose || badcount >= this.settings.badCountToLose) {
                 gameOver()
             }
         }
@@ -447,17 +445,16 @@ class OilGame {
             oil.width =  textureSize[0] * this.scaleCoef() * OIL_SIZE_SCALE_COEF * 0;
             oil.height = textureSize[1] * this.scaleCoef() * OIL_SIZE_SCALE_COEF * 0;
 
-            let animationDuration = 200;
             const animationTick = (startTime) => {
                 if (oil._destroyed) { return; }
                 let time = Date.now() - startTime;
 
-                oil.width =  textureSize[0] * this.scaleCoef() * OIL_SIZE_SCALE_COEF * time / animationDuration;
-                oil.height = textureSize[1] * this.scaleCoef() * OIL_SIZE_SCALE_COEF * time / animationDuration;
+                oil.width =  textureSize[0] * this.scaleCoef() * OIL_SIZE_SCALE_COEF * time / this.settings.itemAnimationDuration;
+                oil.height = textureSize[1] * this.scaleCoef() * OIL_SIZE_SCALE_COEF * time / this.settings.itemAnimationDuration;
 
-                if (time > animationDuration) { time = animationDuration; }
+                if (time > this.settings.itemAnimationDuration) { time = this.settings.itemAnimationDuration; }
 
-                if (time < animationDuration) {
+                if (time < this.settings.itemAnimationDuration) {
                     requestAnimationFrame(() => animationTick(startTime))
                 }
 
@@ -479,7 +476,7 @@ class OilGame {
                 // RENDERED_POINTS.splice(RENDERED_POINTS.indexOf(point), 1);
                 // oil.destroy({ children: true, texture: false, baseTexture: false});
                 updateStat();
-            }, 4000)
+            }, this.settings.badItemActiveTime)
 
             setTimeout(() => {
                 if (!oil._destroyed) {
@@ -490,12 +487,12 @@ class OilGame {
                     if (oil._destroyed) { return; }
                     let time = Date.now() - startTime;
 
-                    oil.width =  textureSize[0] * this.scaleCoef() * OIL_SIZE_SCALE_COEF * (1 - time / animationDuration);
-                    oil.height = textureSize[1] * this.scaleCoef() * OIL_SIZE_SCALE_COEF * (1 - time / animationDuration);
+                    oil.width =  textureSize[0] * this.scaleCoef() * OIL_SIZE_SCALE_COEF * (1 - time / this.settings.itemAnimationDuration);
+                    oil.height = textureSize[1] * this.scaleCoef() * OIL_SIZE_SCALE_COEF * (1 - time / this.settings.itemAnimationDuration);
 
-                    if (time > animationDuration) { time = animationDuration; }
+                    if (time > this.settings.itemAnimationDuration) { time = this.settings.itemAnimationDuration; }
 
-                    if (time < animationDuration) {
+                    if (time < this.settings.itemAnimationDuration) {
                         requestAnimationFrame(() => animationTick(startTime))
                     }
 
@@ -503,7 +500,7 @@ class OilGame {
 
                 animationTick(Date.now());
 
-            }, 4000 - animationDuration)
+            }, this.settings.badItemActiveTime - this.settings.itemAnimationDuration)
         }
 
         const addFish = () => {
@@ -533,25 +530,23 @@ class OilGame {
 
             fish.on('pointerdown', () => {
                 fish.destroy({ children: true, texture: false, baseTexture: false});
-                fishCount--;
+                fishCount++;
                 clearTimeout(timeout);
                 updateStat();
             });
 
             this.pixiApp.stage.addChild(fish);
 
-            let animationDuration = 200;
-
             const animationTick = (startTime) => {
                 if (fish._destroyed) { return; }
                 let time = Date.now() - startTime;
 
-                fish.width =  textureSize[0] * this.scaleCoef() * time / animationDuration;
-                fish.height = textureSize[1] * this.scaleCoef() * time / animationDuration;
+                fish.width =  textureSize[0] * this.scaleCoef() * time / this.settings.itemAnimationDuration;
+                fish.height = textureSize[1] * this.scaleCoef() * time / this.settings.itemAnimationDuration;
 
-                if (time > animationDuration) { time = animationDuration; }
+                if (time > this.settings.itemAnimationDuration) { time = this.settings.itemAnimationDuration; }
 
-                if (time < animationDuration) {
+                if (time < this.settings.itemAnimationDuration) {
                     requestAnimationFrame(() => animationTick(startTime))
                 }
 
@@ -562,22 +557,22 @@ class OilGame {
             timeout = setTimeout(() => {
                 if (fish._destroyed) { return; }
                 fish.destroy({ children: true, texture: false, baseTexture: false});
-            }, 1800)
+            }, this.settings.fishActiveTime)
         }
 
-        factories = this.currentTextures.factory.map(f => new Factory(f));
+        factories = this.currentTextures.factory.map(f => new Factory(f, this.settings));
         factories.forEach(f => f.drow(this.pixiApp).setPositionAndSize(this.scaleCoef()));
 
         const tick = () => {
             let complexity = 1;
-            let nextTickDelay = 2000; 
+            let nextTickDelay = this.settings.tickTimeBase; 
 
             for (let f of factories) {
                 complexity += f.active ? 1 : 0;
                 complexity += f.broken ? 1 : 0;
             }
 
-            nextTickDelay -= complexity * 100;
+            nextTickDelay -= complexity * this.settings.tickTimeSubtractPerComplexity;
 
             addOil( Geometry.randomPointInPath(this.currentTextures.riverPath, RENDERED_POINTS, 90));
 
@@ -718,8 +713,87 @@ class Geometry {
     }
 }
 
-new OilGame(document.getElementsByClassName('container')[0], document.getElementById('oilGame'));
+const SETTINGS = {
+    badCountToLose: 12,
+    fishCountToLose: 4,
+    itemAnimationDuration: 200,
+    badItemActiveTime: 4000,
+    fishActiveTime: 1000,
 
+    tickTimeBase: 4000,
+    tickTimeSubtractPerComplexity: 100,
+
+    factoryClickCount: 5,
+    trumpetClickCount: 3,
+
+
+    reopenFactoryDelayFrom: 4,
+    reopenFactoryDelayTo: 10,
+
+
+    reopenTrumpetDelayFrom: 4,
+    reopenTrumpetDelayTo: 10
+}
+
+const SETTINGS_DESCRIPTION = {
+    badCountToLose: 'Сколько пропустить плохих, чтобы проиграть',
+    fishCountToLose: 'Сколько поймать рыб, чтобы проиграть',
+    itemAnimationDuration: 'Время анимации появления элементов в реке',
+    badItemActiveTime: 'Сколько времени "плохой" элемент активный для нажания',
+    fishActiveTime: 'Сколько времени рыба элемент активный для нажания',
+
+    tickTimeBase: 'Базовый интервал появления элемента',
+    tickTimeSubtractPerComplexity: 'На сколько уменьшается интревал, для каждого элемента который поднимает сложность (Завод\\труба\\машина)',
+
+    factoryClickCount: 'Кликов чтобы выключить завод',
+    trumpetClickCount: 'Кликов чтобы починить трубу',
+
+
+    reopenFactoryDelayFrom: 'Время через которое откроется завод (ОТ)',
+    reopenFactoryDelayTo: 'Время через которое откроется завод (ДО)',
+
+
+    reopenTrumpetDelayFrom:  'Время через которое сломается труба (ОТ)',
+    reopenTrumpetDelayTo: 'Время через которое сломается труба (ДО)'
+}
+
+
+
+new OilGame(document.getElementsByClassName('container')[0], document.getElementById('oilGame'), SETTINGS);
+
+
+// DEBUG SEttings = 
+(() => {
+    try {
+        saved = JSON.parselocalStorage.getItem('OIL_GAME_SETTINGS');
+
+        Object.keys(saved).forEach((k) => {
+            SETTINGS[k] = saved[k];
+        })
+    } catch (e) { console.log(e) }
+
+    Object.keys(SETTINGS).forEach(k => {
+        let inp = document.createElement('input')
+        let span = document.createElement('span')
+        span.innerText = SETTINGS_DESCRIPTION[k] + ` (${k})`
+        let div = document.createElement('div');
+
+        div.appendChild(span);
+        div.appendChild(inp);
+
+        inp.value = SETTINGS[k];
+        
+
+        inp.addEventListener('input', e => {
+            SETTINGS[k] = +inp.value;
+            localStorage.setItem('OIL_GAME_SETTINGS', JSON.stringify(SETTINGS))
+        })
+
+        debugPlace.appendChild(div);
+
+    })
+
+    })();
 
 // [522, 190]
 // [600, 150]
