@@ -135,10 +135,17 @@ class Factory {
         this.trumpetBrokenTexture = PIXI.Texture.from(textures.trumpet.url_broken);
 
         this.factory = new PIXI.Sprite(this.factoryInactiveTexture);
+        this.factoryActiveLayer = new PIXI.Sprite(this.factoryActiveTexture);
+        this.factoryActiveLayer.alpha = 0;
+
         this.trumpet = new PIXI.Sprite(this.trumpetFixedTexture);
+        this.trumpetActiveLayer = new PIXI.Sprite(this.trumpetBrokenTexture);
+        this.trumpetActiveLayer.alpha = 0;
 
         this.trumpet.zIndex = 10000;
         this.factory.zIndex = 10000;
+        this.factoryActiveLayer.zIndex = 10000;
+        this.trumpetActiveLayer.zIndex = 10000;
 
         this.active = false;
         this.broken = false;
@@ -163,13 +170,15 @@ class Factory {
         this.factory.on('pointerdown', () => {
             if (this.active) {
                 factoryClickCount ++;
+                // console.log(factoryClickCount, this.settings.factoryClickCount)
+                this.factoryActiveLayer.alpha = (this.settings.factoryClickCount - factoryClickCount) / this.settings.factoryClickCount;
                 if (factoryClickCount >= this.settings.factoryClickCount) {
                     factoryClickCount = 0;
                     this.deactivate();
 
                     this.timeouts.push(setTimeout(() => {
                         this.activate()
-                    }, random(this.reopenFactoryDelayFrom, this.reopenFactoryDelayTo) * 1000))
+                    }, random(this.settings.reopenFactoryDelayFrom, this.settings.reopenFactoryDelayTo) * 1000))
                 }
             }
         })
@@ -180,13 +189,14 @@ class Factory {
         this.trumpet.on('pointerdown', () => {
             if (this.broken) {
                 trumpetClickCount ++;
+                this.trumpetActiveLayer.alpha = (this.settings.trumpetClickCount - trumpetClickCount) / this.settings.trumpetClickCount;;
                 if (trumpetClickCount >= this.settings.trumpetClickCount) {
                     trumpetClickCount = 0;
                     this.fix();
 
                     this.timeouts.push(setTimeout(() => {
                         this.broke()
-                    }, random(this.reopenTrumpetDelayFrom, this.reopenTrumpetDelayTo) * 1000))
+                    }, random(this.settings.reopenTrumpetDelayFrom, this.settings.reopenTrumpetDelayTo) * 1000))
                 }
             }
         })
@@ -195,7 +205,11 @@ class Factory {
 
     drow(pixiApp) {
         pixiApp.stage.addChild(this.factory);
+        pixiApp.stage.addChild(this.factoryActiveLayer);
+
         pixiApp.stage.addChild(this.trumpet);
+        pixiApp.stage.addChild(this.trumpetActiveLayer);
+
 
         return this;
     }
@@ -206,35 +220,45 @@ class Factory {
         this.factory.width = this.textures.size[0] * scaleCoef;
         this.factory.height = this.textures.size[1] * scaleCoef;
 
+        this.factoryActiveLayer.x = this.textures.position[0] * scaleCoef;
+        this.factoryActiveLayer.y = this.textures.position[1] * scaleCoef;
+        this.factoryActiveLayer.width = this.textures.size[0] * scaleCoef;
+        this.factoryActiveLayer.height = this.textures.size[1] * scaleCoef;
+
         this.trumpet.x = this.textures.trumpet.position[0] * scaleCoef;
         this.trumpet.y = this.textures.trumpet.position[1] * scaleCoef;
         this.trumpet.width = this.textures.trumpet.size[0] * scaleCoef;
         this.trumpet.height = this.textures.trumpet.size[1] * scaleCoef;
 
+        this.trumpetActiveLayer.x = this.textures.trumpet.position[0] * scaleCoef;
+        this.trumpetActiveLayer.y = this.textures.trumpet.position[1] * scaleCoef;
+        this.trumpetActiveLayer.width = this.textures.trumpet.size[0] * scaleCoef;
+        this.trumpetActiveLayer.height = this.textures.trumpet.size[1] * scaleCoef;
+
         return this;
     }
 
 
-    activate() {
-        this.factory.texture = this.factoryActiveTexture;
+    activate() { 
+        this.factoryActiveLayer.alpha = 1;
         this.active = true;
         return this;
     }
 
     deactivate() {
-        this.factory.texture = this.factoryInactiveTexture;
+        this.factoryActiveLayer.alpha = 0;
         this.active = false;
         return this;
     }
 
     broke() {
-        this.trumpet.texture = this.trumpetBrokenTexture;
+        this.trumpetActiveLayer.alpha = 1;
         this.broken = true;
         return this;
     }
 
     fix() {
-        this.trumpet.texture = this.trumpetFixedTexture;
+        this.trumpetActiveLayer.alpha = 0;
         this.broken = false;
         return this;
     }
