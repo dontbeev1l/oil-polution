@@ -63,6 +63,7 @@ const TEXTURE_PACK_1 = {
             url_inactive: './textures/zavod2_ne_rabotaet.png',
             url_active: './textures/zavod2.png',
             size: [239, 216],
+            hit: [[7, 120], [121, 91], [134, 42], [211, 57],[212,150],[198, 166], [80, 207],[6, 172]],
             position: [30, 80],
             trumpet: {
                 url_fixed: './textures/truba22.png',
@@ -71,6 +72,18 @@ const TEXTURE_PACK_1 = {
                 position: [180, 230]
             }
         },
+        // {
+        //     url_inactive: './textures/house.png',
+        //     url_active: './textures/house.png',
+        //     size: [325, 235],
+        //     position: [30, 80],
+        //     trumpet: {
+        //         url_fixed: './textures/truba22.png',
+        //         url_broken: './textures/truba2.png',
+        //         size: [112, 117],
+        //         position: [180, 230]
+        //     }
+        // },
         {
             url_inactive: './textures/zavod1_ne_rabotaet.png',
             url_active: './textures/zavod1.png',
@@ -222,6 +235,14 @@ class Factory {
         this.factory.width = this.textures.size[0] * scaleCoef;
         this.factory.height = this.textures.size[1] * scaleCoef;
 
+        const pos = [0, 0];
+
+        if (this.textures.hit) {
+            const hitPoly =  new PIXI.Polygon(this.textures.hit.flat());
+            console.log(hitPoly);
+            this.factory.hitArea = hitPoly;
+        }
+
         this.factoryActiveLayer.x = this.textures.position[0] * scaleCoef;
         this.factoryActiveLayer.y = this.textures.position[1] * scaleCoef;
         this.factoryActiveLayer.width = this.textures.size[0] * scaleCoef;
@@ -279,6 +300,7 @@ class OilGame {
 
         this.pixiApp = new PIXI.Application({
             view: canvas,
+            antialias: true,    
             backgroundColor: 0x6b841a,
             width: this.containerWidth(),
             height: this.calculateByPropotrion(this.containerWidth(), this.currentTextures.background.size[0], this.currentTextures.background.size[1])
@@ -302,15 +324,15 @@ class OilGame {
         });
         console.log(this);
         this.renderMenu();
-        // this.debugRiverArea();
+        // this.debugRiverArea(this.currentTextures.riverPath);
     }
 
-    debugRiverArea() {
+    debugRiverArea(path) {
         const graphics = new PIXI.Graphics();
         graphics.beginFill(0xFF3300);
         graphics.lineStyle(4, 0xffd900, 1);
-        graphics.moveTo(...this.currentTextures.riverPath[0].map(c => c * this.scaleCoef()));
-        this.currentTextures.riverPath.forEach(point => {
+        graphics.moveTo(...path[0].map(c => c * this.scaleCoef()));
+        path.forEach(point => {
             graphics.lineTo(...point.map(c => c * this.scaleCoef()));
         })
         graphics.closePath();
@@ -319,14 +341,57 @@ class OilGame {
     }
 
     scaleCoef() {
-        return this.containerWidth() / this.currentTextures.background.size[0]
+        const k = Math.round(this.containerWidth() / this.currentTextures.background.size[0] * 10) / 10;
+        return k;
+    }
+
+    createDarkLayer() {
+        this._darkLayerGraphics = new PIXI.Graphics();
+        this._darkLayerGraphics.beginFill(0x000000, 0.3);
+        this._darkLayerGraphics.drawRect(0, 0, this.pixiApp.renderer.width, this.pixiApp.renderer.height);
+        this._darkLayerGraphics.endFill(); 
+        this.pixiApp.stage.addChild(this._darkLayerGraphics);
+    }
+
+    destroyDarkLayer() {
+        this.pixiApp.stage.removeChild(this._darkLayerGraphics);
     }
 
     renderMenu() {
-        const text = new PIXI.Text('PLAY', {fontFamily : 'Arial', fontSize: 24, fill : 0x000000, align : 'center'});
+
+        const text = new PIXI.Text('НАЧАТЬ УБОРКУ', {fontFamily : 'Arial', fontSize: 24, fill : 0xffffff, align : 'center', fontWeight: 600});
         this.pixiApp.stage.addChild(text)
-        text.interactive = true;
-        text.on('pointerdown', () => { 
+        const graphics = new PIXI.Graphics();
+        graphics.interactive = true;
+
+        graphics.zIndex = 2;
+        text.zIndex = 3;
+
+        this.createDarkLayer();
+
+        graphics.lineStyle(2, 0xb841a, 1);
+        graphics.beginFill(0x98b148, 1);
+        
+
+        const margin = 60;
+        const width = text.width + margin * this.scaleCoef();
+        const height = text.height + margin * this.scaleCoef();
+        const x = (this.pixiApp.renderer.width - width * this.scaleCoef()) / 2;
+        const y = (this.pixiApp.renderer.height - height * this.scaleCoef()) / 2;
+
+        text.x = x + margin * this.scaleCoef() / 2;
+        text.y = y + margin * this.scaleCoef() / 2;
+
+        graphics.drawRoundedRect(x, y, width, height, 16);
+        graphics.endFill();
+
+        graphics.defaultCursor = 'pointer';
+        this.pixiApp.stage.addChild(graphics);
+
+
+        graphics.on('pointerdown', () => { 
+            this.destroyDarkLayer();
+            this.pixiApp.stage.removeChild(graphics);
             this.pixiApp.stage.removeChild(text); this.startGame() 
         });
     }
