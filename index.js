@@ -239,7 +239,6 @@ class Factory {
 
         if (this.textures.hit) {
             const hitPoly =  new PIXI.Polygon(this.textures.hit.flat());
-            console.log(hitPoly);
             this.factory.hitArea = hitPoly;
         }
 
@@ -341,7 +340,7 @@ class OilGame {
     }
 
     scaleCoef() {
-        const k = Math.round(this.containerWidth() / this.currentTextures.background.size[0] * 10) / 10;
+        const k = Math.round(this.containerWidth() / this.currentTextures.background.size[0] * 1000) / 1000;
         return k;
     }
 
@@ -376,8 +375,10 @@ class OilGame {
         const margin = 60;
         const width = text.width + margin * this.scaleCoef();
         const height = text.height + margin * this.scaleCoef();
-        const x = (this.pixiApp.renderer.width - width * this.scaleCoef()) / 2;
-        const y = (this.pixiApp.renderer.height - height * this.scaleCoef()) / 2;
+        const x = (this.pixiApp.renderer.width - width) / 2;
+        const y = (this.pixiApp.renderer.height - height) / 2;
+
+        console.log(this.pixiApp.renderer.width,  width, this.scaleCoef())
 
         text.x = x + margin * this.scaleCoef() / 2;
         text.y = y + margin * this.scaleCoef() / 2;
@@ -392,7 +393,8 @@ class OilGame {
         graphics.on('pointerdown', () => { 
             this.destroyDarkLayer();
             this.pixiApp.stage.removeChild(graphics);
-            this.pixiApp.stage.removeChild(text); this.startGame() 
+            this.pixiApp.stage.removeChild(text);
+            this.startGame() 
         });
     }
 
@@ -434,8 +436,8 @@ class OilGame {
         }
 
         //  add Stat
-        const STAT_POSITION = [50, 30];
-        const STAT_MARGIN = 20;
+        const STAT_POSITION = [10, 10];
+        const STAT_MARGIN = 15;
 
         const rubbishTexture = PIXI.Texture.from(this.currentTextures.rubbishIcon.url);  
         const rubbishTextureSize = this.currentTextures.rubbishIcon.size;
@@ -513,7 +515,7 @@ class OilGame {
 
         const addOil = (point) => {
             // point = [0, 0]
-            let OIL_SIZE_SCALE_COEF = random(6, 10) / 10;
+            let OIL_SIZE_SCALE_COEF = random(8, 10) / 10;
             let timeout;
             const itemIndex = random(this.currentTextures.badItems.length - 1);
             const textureSize = this.currentTextures.badItems[itemIndex].size;
