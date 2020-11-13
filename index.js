@@ -214,7 +214,6 @@ function OILGame() {
             this.factory.on('pointerdown', () => {
                 if (this.active) {
                     factoryClickCount++;
-                    // console.log(factoryClickCount, this.settings.factoryClickCount)
                     this.factoryActiveLayer.alpha = (this.settings.factoryClickCount - factoryClickCount) / this.settings.factoryClickCount;
                     if (factoryClickCount >= this.settings.factoryClickCount) {
                         factoryClickCount = 0;
@@ -343,14 +342,12 @@ function OILGame() {
 
 
             this.onContainerResize((event) => {
-                console.log('RESIZE', event)
                 this.pixiApp.renderer.resize(
                     event.width,
                     this.calculateByPropotrion(event.width, this.currentTextures.background.size[0], this.currentTextures.background.size[1])
                 );
                 this.normilizebgSize();
             });
-            console.log(this);
             this.renderMenu();
             // this.debugRiverArea(this.currentTextures.riverPath);
         }
@@ -409,7 +406,6 @@ function OILGame() {
             const x = (this.pixiApp.renderer.width - width) / 2;
             const y = buttonY || (this.pixiApp.renderer.height - height) / 2;
 
-            console.log(this.pixiApp.renderer.width, width, this.scaleCoef())
 
             text.x = x + margin * this.scaleCoef() / 2;
             text.y = y + margin * this.scaleCoef() / 2;
@@ -529,7 +525,7 @@ function OILGame() {
             spritesForClear.push(rubbishSprite, rubbishText, fishSprite, fishText)
 
 
-            let time = 2;
+            let time = 60;
             const timerText = new PIXI.Text('60', { fontFamily: 'Arial', fontSize: 24, fill: 0x000000, align: 'left', fotWeight: '600' });
             timerText.y = STAT_POSITION[1] * this.scaleCoef()
             timerText.x = (this.currentTextures.background.size[0] - STAT_POSITION[1]) * this.scaleCoef() - timerText.width;
@@ -544,8 +540,6 @@ function OILGame() {
                 }
             }, 1000));
             spritesForClear.push(timerText);
-            //
-
 
             const updateStat = () => {
                 if (rubbishText._destroyed) { return; }
@@ -850,67 +844,65 @@ function OILGame() {
         }
     }
 
-
-    const SETTINGS_DESCRIPTION = {
-        badCountToLose: 'Сколько пропустить плохих, чтобы проиграть',
-        fishCountToLose: 'Сколько поймать рыб, чтобы проиграть',
-        itemAnimationDuration: 'Время анимации появления элементов в реке',
-        badItemActiveTime: 'Сколько времени "плохой" элемент активный для нажания',
-        fishActiveTime: 'Сколько времени рыба элемент активный для нажания',
-
-        tickTimeBase: 'Базовый интервал появления элемента',
-        tickTimeSubtractPerComplexity: 'На сколько уменьшается интревал, для каждого элемента который поднимает сложность (Завод\\труба\\машина)',
-
-        factoryClickCount: 'Кликов чтобы выключить завод',
-        trumpetClickCount: 'Кликов чтобы починить трубу',
-
-
-        reopenFactoryDelayFrom: 'Время через которое откроется завод (ОТ)',
-        reopenFactoryDelayTo: 'Время через которое откроется завод (ДО)',
-
-
-        reopenTrumpetDelayFrom: 'Время через которое сломается труба (ОТ)',
-        reopenTrumpetDelayTo: 'Время через которое сломается труба (ДО)'
-    }
-
     return new OilGame(document.getElementsByClassName('container')[0], document.getElementById('oilGame'), SETTINGS);
 }
 
-OILGame()
+OILGame();
+
+const SETTINGS_DESCRIPTION = {
+    badCountToLose: 'Сколько пропустить плохих, чтобы проиграть',
+    fishCountToLose: 'Сколько поймать рыб, чтобы проиграть',
+    itemAnimationDuration: 'Время анимации появления элементов в реке',
+    badItemActiveTime: 'Сколько времени "плохой" элемент активный для нажания',
+    fishActiveTime: 'Сколько времени рыба элемент активный для нажания',
+
+    tickTimeBase: 'Базовый интервал появления элемента',
+    tickTimeSubtractPerComplexity: 'На сколько уменьшается интревал, для каждого элемента который поднимает сложность (Завод\\труба\\машина)',
+
+    factoryClickCount: 'Кликов чтобы выключить завод',
+    trumpetClickCount: 'Кликов чтобы починить трубу',
 
 
-    // DEBUG SEttings = 
-    (() => {
-        try {
-            saved = JSON.parse(localStorage.getItem('OIL_GAME_SETTINGS'));
-
-            Object.keys(saved).forEach((k) => {
-                SETTINGS[k] = saved[k];
-            })
-        } catch (e) { console.log(e) }
-
-        Object.keys(SETTINGS).forEach(k => {
-            let inp = document.createElement('input')
-            let span = document.createElement('span')
-            span.innerText = SETTINGS_DESCRIPTION[k] + ` (${k})`
-            let div = document.createElement('div');
-
-            div.appendChild(span);
-            div.appendChild(inp);
-
-            inp.value = SETTINGS[k];
+    reopenFactoryDelayFrom: 'Время через которое откроется завод (ОТ)',
+    reopenFactoryDelayTo: 'Время через которое откроется завод (ДО)',
 
 
-            inp.addEventListener('input', e => {
-                SETTINGS[k] = +inp.value;
-                localStorage.setItem('OIL_GAME_SETTINGS', JSON.stringify(SETTINGS))
-            })
+    reopenTrumpetDelayFrom: 'Время через которое сломается труба (ОТ)',
+    reopenTrumpetDelayTo: 'Время через которое сломается труба (ДО)'
+};
 
-            debugPlace.appendChild(div);
+// DEBUG SEttings = 
+(() => {
+    try {
+        saved = JSON.parse(localStorage.getItem('OIL_GAME_SETTINGS'));
 
+        Object.keys(saved).forEach((k) => {
+            SETTINGS[k] = saved[k];
+        })
+    } catch (e) { console.log(e) }
+
+    Object.keys(SETTINGS).forEach(k => {
+        let inp = document.createElement('input')
+        let span = document.createElement('span')
+        span.innerText = SETTINGS_DESCRIPTION[k] + ` (${k})`
+        let div = document.createElement('div');
+
+        div.appendChild(span);
+        div.appendChild(inp);
+
+        inp.value = SETTINGS[k];
+
+
+        inp.addEventListener('input', e => {
+            SETTINGS[k] = +inp.value;
+            localStorage.setItem('OIL_GAME_SETTINGS', JSON.stringify(SETTINGS))
         })
 
-    })();
+        debugPlace.appendChild(div);
+
+    })
+
+})();
 
 // [522, 190]
 // [600, 150]
@@ -919,6 +911,3 @@ OILGame()
 // [13, 18]
 
 // [793, 109]
-
-// console.log(Geometry.lineSegmentsCrossing([522, 190], [600, 150], [13, 18], [793, 109] ))
-// console.log(Geometry.lineSegmentsCrossing([715, 20], [600, 150], [13, 18], [793, 109] ))
