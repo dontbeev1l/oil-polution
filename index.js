@@ -425,9 +425,24 @@ function OILGame() {
             });
         }
 
-        renderEndingView() {
-            const text = new PIXI.Text(RESULT_NO_BAD,
+        renderEndingView(success, badcount, badCountToLose) {
+
+            let textValue;
+            if (badcount > 8) {
+                textValue = RESULT_NO_FISH_NO_SWIM
+            } else if (badcount > 6) {
+                textValue = RESULT_BAD
+            } else if (badcount > 3) {
+                textValue = RESULT_NO_BAD
+            } else if (badcount > 1) {
+                textValue = RESULT_GOOD
+            } else if (badcount === 0) {
+                textValue = RESULT_EXELENT;
+            }
+            const text = new PIXI.Text(textValue,
                 { fontFamily: 'Arial', fontSize: 24, fill: 0xffffff, align: 'center', fontWeight: 600 })
+
+
             text.zIndex = 4;
             this.pixiApp.stage.addChild(text);
 
@@ -447,6 +462,7 @@ function OILGame() {
             const spritesForClear = [];
             const intervalForGameover = [];
             const fnForGameOver = [];
+            let time = 60;
 
             let fishCount = 0;
 
@@ -455,7 +471,7 @@ function OILGame() {
             let tickTimeout;
             let factories = [];
 
-            const gameOver = () => {
+            const gameOver = (success) => {
                 clearTimeout(tickTimeout);
                 timeoutsForGameover.forEach(t => {
                     clearTimeout(t);
@@ -476,7 +492,7 @@ function OILGame() {
 
                 fnForGameOver.forEach((fn) => fn());
 
-                this.renderEndingView();
+                this.renderEndingView(success, badcount, this.settings.badCountToLose);
             }
 
             //  add Stat
@@ -525,7 +541,6 @@ function OILGame() {
             spritesForClear.push(rubbishSprite, rubbishText, fishSprite, fishText)
 
 
-            let time = 60;
             const timerText = new PIXI.Text('60', { fontFamily: 'Arial', fontSize: 24, fill: 0x000000, align: 'left', fotWeight: '600' });
             timerText.y = STAT_POSITION[1] * this.scaleCoef()
             timerText.x = (this.currentTextures.background.size[0] - STAT_POSITION[1]) * this.scaleCoef() - timerText.width;
@@ -605,8 +620,6 @@ function OILGame() {
                 timeout = setTimeout(() => {
                     oil.interactive = false;
                     badcount++;
-                    // RENDERED_POINTS.splice(RENDERED_POINTS.indexOf(point), 1);
-                    // oil.destroy({ children: true, texture: false, baseTexture: false});
                     updateStat();
                 }, this.settings.badItemActiveTime)
 
@@ -903,11 +916,3 @@ const SETTINGS_DESCRIPTION = {
     })
 
 })();
-
-// [522, 190]
-// [600, 150]
-// [715, 20]
-
-// [13, 18]
-
-// [793, 109]
