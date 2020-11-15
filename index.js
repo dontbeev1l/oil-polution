@@ -355,7 +355,9 @@ function OILGame() {
         destroy() {
             this.destroyed = true;
             this.car.destroy();
-            this.trumpet.destroy();
+            if (this.trumpet) {
+                this.trumpet.destroy();
+            }
         }
 
         run() {
