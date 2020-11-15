@@ -100,6 +100,7 @@ function OILGame() {
                 url_active: './textures/zavod1.png',
                 size: [235, 181],
                 position: [464, 27],
+                hit: [13, 82, 14, 32, 77, 17, 104, 25, 152, 13, 222, 32, 222, 127, 90, 173, 30, 149, 30, 135, 57, 129, 57, 103],
                 trumpet: {
                     url_fixed: './textures/truba11.png',
                     url_broken: './textures/truba1.png',
@@ -125,6 +126,7 @@ function OILGame() {
                 url_active: './textures/zavod3.png',
                 size: [233, 266],
                 position: [564, 647],
+                hit: [16, 223, 16, 174, 70, 159, 77, 68, 108, 68, 113, 124, 161, 112, 220, 135, 219, 211, 163, 230, 144, 220, 145, 236, 85, 256],
                 trumpet: {
                     url_fixed: './textures/truba3.png',
                     url_broken: './textures/truba33.png',
@@ -137,6 +139,7 @@ function OILGame() {
                 url_active: './textures/zavod4.png',
                 size: [261, 225],
                 position: [308, 783],
+                hit: [6, 161, 7, 107, 28, 101, 29, 92, 58, 85, 59, 42, 119, 31, 122, 82, 253, 115, 252, 136, 202, 154, 229, 161, 230, 184, 153, 217, 92, 192, 82, 196],
                 trumpet: {
                     url_fixed: './textures/truba4.png',
                     url_broken: './textures/truba44.png',
