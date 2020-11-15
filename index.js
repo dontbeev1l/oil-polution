@@ -104,6 +104,7 @@ function OILGame() {
                 trumpet: {
                     url_fixed: './textures/truba11.png',
                     url_broken: './textures/truba1.png',
+                    hit: [2, 15, 3, 2, 23, 1, 49, 12, 66, 28, 70, 36, 70, 82, 79, 87, 75, 95, 56, 99, 36, 95, 31, 90, 36, 84, 42, 82, 42, 41, 32, 27, 20, 18],
                     size: [90, 114],
                     position: [641, 109]
                 }
@@ -195,7 +196,18 @@ function OILGame() {
 
             this.active = false;
             this.broken = false;
-            this.addClickEvents()
+            this.addClickEvents();
+
+
+            if (this.textures.hit) {
+                const hitPoly = new PIXI.Polygon(this.textures.hit.flat());
+                this.factory.hitArea = hitPoly;
+            }
+
+            if (this.textures.trumpet.hit) {
+                const hitPoly = new PIXI.Polygon(this.textures.trumpet.hit.flat());
+                this.trumpet.hitArea = hitPoly;
+            }
 
             this.activate();
             setTimeout(() => { this.broke() }, random(10, 3) * 1000);
@@ -269,10 +281,6 @@ function OILGame() {
 
             const pos = [0, 0];
 
-            if (this.textures.hit) {
-                const hitPoly = new PIXI.Polygon(this.textures.hit.flat());
-                this.factory.hitArea = hitPoly;
-            }
 
             this.factoryActiveLayer.x = this.textures.position[0] * scaleCoef;
             this.factoryActiveLayer.y = this.textures.position[1] * scaleCoef;
@@ -308,6 +316,7 @@ function OILGame() {
         broke() {
             this.trumpetActiveLayer.alpha = 1;
             this.broken = true;
+            this.tru
             return this;
         }
 
