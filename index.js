@@ -89,7 +89,8 @@ function OILGame() {
             startPos: [-147, -112],
             trumpet: {
                 texture: './textures/truba_mashiny.png',
-                size: [62, 82]
+                size: [62, 82],
+                pos: [363, 192]
             }
         },
 
@@ -322,7 +323,9 @@ function OILGame() {
         }
 
         render(stage, scaleCoef) {
+            this.stage = stage;
             this.scaleCoef = scaleCoef;
+
             stage.addChild(this.car);
 
             this.car.width = this.textures.car.size[0] * scaleCoef;
@@ -334,10 +337,19 @@ function OILGame() {
             this.run();
         }
 
+
+        destroy() {
+            this.destroyed = true;
+            this.car.destroy();
+            this.trumpet.destroy();
+        }
+
         run() {
             const animationDuration = 1300;
 
             const tick = (startTime) => {
+                if (this.destroyed) { return; }
+
                 const currentTime = Date.now();
                 const time = currentTime - startTime;
                 let stop = false;
@@ -358,10 +370,22 @@ function OILGame() {
 
                 if (!stop) {
                     requestAnimationFrame(() => tick(startTime))
+                } else {
+                    this.renderTrumpet();
                 }
             }
 
             tick(Date.now())
+        }
+
+        renderTrumpet() {
+            this.trumpet = PIXI.Sprite.from(this.textures.car.trumpet.texture);
+            this.trumpet.zIndex = 10002;
+            this.trumpet.width = this.textures.car.trumpet.size[0] * this.scaleCoef;
+            this.trumpet.height = this.textures.car.trumpet.size[1] * this.scaleCoef;
+            this.trumpet.x = this.textures.car.trumpet.pos[0] * this.scaleCoef;
+            this.trumpet.y = this.textures.car.trumpet.pos[1] * this.scaleCoef;
+            this.stage.addChild(this.trumpet);
         }
 
         animationPos(x, x1, y1, x2, y2) {
@@ -550,8 +574,14 @@ function OILGame() {
                 this.renderEndingView(success, badcount, this.settings.badCountToLose);
             }
 
+            let carActive = false;
             const car = new Car(this.currentTextures);
-            car.render(this.pixiApp.stage, this.scaleCoef());
+            fnForGameOver.push(() => car.destroy());
+
+            timeoutsForGameover.push(setTimeout(() => {
+                car.render(this.pixiApp.stage, this.scaleCoef());
+                carActive = true;
+            }, 35000))
 
             //  add Stat
             const STAT_POSITION = [10, 10];
@@ -560,7 +590,7 @@ function OILGame() {
             const rubbishTexture = PIXI.Texture.from(this.currentTextures.rubbishIcon.url);
             const rubbishTextureSize = this.currentTextures.rubbishIcon.size;
             const rubbishSprite = new PIXI.Sprite(rubbishTexture);
-
+            rubbishSprite.zIndex = 20000;
 
             rubbishSprite.width = rubbishTextureSize[0] * this.scaleCoef();
             rubbishSprite.height = rubbishTextureSize[1] * this.scaleCoef();
@@ -569,6 +599,7 @@ function OILGame() {
             rubbishSprite.y = STAT_POSITION[1] * this.scaleCoef();
 
             const rubbishText = new PIXI.Text('0%', { fontFamily: 'Arial', fontSize: 24, fill: 0x000000, align: 'left', fotWeight: '600' });
+            rubbishText.zIndex = 20000;
 
             rubbishText.x = (STAT_POSITION[0] + rubbishTextureSize[0] + STAT_MARGIN) * this.scaleCoef();
             rubbishText.y = STAT_POSITION[1] * this.scaleCoef() + (rubbishTextureSize[1] * this.scaleCoef() - rubbishText.height) / 2;
@@ -579,7 +610,7 @@ function OILGame() {
             const fishTexture = PIXI.Texture.from(this.currentTextures.fishIcon.url);
             const fishTextureSize = this.currentTextures.fishIcon.size;
             const fishSprite = new PIXI.Sprite(fishTexture);
-
+            fishSprite.zIndex = 20000;
 
             fishSprite.width = fishTextureSize[0] * this.scaleCoef();
             fishSprite.height = fishTextureSize[1] * this.scaleCoef();
@@ -589,6 +620,7 @@ function OILGame() {
 
 
             const fishText = new PIXI.Text('100%', { fontFamily: 'Arial', fontSize: 24, fill: 0x000000, align: 'left', fotWeight: '600' });
+            fishText.zIndex = 20000;
 
             fishText.x = fishSprite.x + fishSprite.width + STAT_MARGIN * this.scaleCoef();
             fishText.y = STAT_POSITION[1] * this.scaleCoef() + (rubbishTextureSize[1] * this.scaleCoef() - fishText.height) / 2;
@@ -603,6 +635,7 @@ function OILGame() {
             timerText.y = STAT_POSITION[1] * this.scaleCoef()
             timerText.x = (this.currentTextures.background.size[0] - STAT_POSITION[1]) * this.scaleCoef() - timerText.width;
             this.pixiApp.stage.addChild(timerText);
+            timerText.zIndex = 20000;
 
             intervalForGameover.push(setInterval(() => {
                 time--;
@@ -772,6 +805,10 @@ function OILGame() {
                 for (let f of factories) {
                     complexity += f.active ? 1 : 0;
                     complexity += f.broken ? 1 : 0;
+                }
+
+                if (carActive) {
+                    complexity += 1;
                 }
 
                 nextTickDelay -= complexity * this.settings.tickTimeSubtractPerComplexity;
