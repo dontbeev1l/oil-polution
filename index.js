@@ -21,6 +21,7 @@ const SETTINGS = {
     reopenTrumpetDelayTo: 10
 }
 
+
 function OILGame() {
     const TEXTURE_PACK_1 = {
         background: {
@@ -81,7 +82,30 @@ function OILGame() {
             [186, 953]
         ],
 
+        car: {
+            texture: './textures/mashina.png',
+            size: [147, 112],
+            finalPos: [379, 145],
+            startPos: [-147, -112],
+            trumpet: {
+                texture: './textures/truba_mashiny.png',
+                size: [62, 82]
+            }
+        },
+
         factory: [
+            {
+                url_inactive: './textures/zavod1_ne_rabotaet.png',
+                url_active: './textures/zavod1.png',
+                size: [235, 181],
+                position: [464, 27],
+                trumpet: {
+                    url_fixed: './textures/truba11.png',
+                    url_broken: './textures/truba1.png',
+                    size: [90, 114],
+                    position: [641, 109]
+                }
+            },
             {
                 url_inactive: './textures/zavod2_ne_rabotaet.png',
                 url_active: './textures/zavod2.png',
@@ -93,30 +117,6 @@ function OILGame() {
                     url_broken: './textures/truba2.png',
                     size: [112, 117],
                     position: [180, 230]
-                }
-            },
-            // {
-            //     url_inactive: './textures/house.png',
-            //     url_active: './textures/house.png',
-            //     size: [325, 235],
-            //     position: [30, 80],
-            //     trumpet: {
-            //         url_fixed: './textures/truba22.png',
-            //         url_broken: './textures/truba2.png',
-            //         size: [112, 117],
-            //         position: [180, 230]
-            //     }
-            // },
-            {
-                url_inactive: './textures/zavod1_ne_rabotaet.png',
-                url_active: './textures/zavod1.png',
-                size: [235, 181],
-                position: [464, 27],
-                trumpet: {
-                    url_fixed: './textures/truba11.png',
-                    url_broken: './textures/truba1.png',
-                    size: [90, 114],
-                    position: [641, 109]
                 }
             },
             {
@@ -166,7 +166,7 @@ function OILGame() {
     }
 
     class Factory {
-        constructor(textures, settings) {
+        constructor(textures, settings, index) {
             this.settings = settings;
 
             this.timeouts = [];
@@ -184,10 +184,10 @@ function OILGame() {
             this.trumpetActiveLayer = new PIXI.Sprite(this.trumpetBrokenTexture);
             this.trumpetActiveLayer.alpha = 0;
 
-            this.trumpet.zIndex = 10000;
-            this.factory.zIndex = 10000;
-            this.factoryActiveLayer.zIndex = 10000;
-            this.trumpetActiveLayer.zIndex = 10000;
+            this.trumpet.zIndex = 10000 + (index || 0);
+            this.factory.zIndex = 10000 + (index || 0);
+            this.factoryActiveLayer.zIndex = 10000 + (index || 0);
+            this.trumpetActiveLayer.zIndex = 10000 + (index || 0);
 
             this.active = false;
             this.broken = false;
@@ -313,6 +313,61 @@ function OILGame() {
             return this;
         }
 
+    }
+
+    class Car {
+        constructor(textures) {
+            this.textures = textures;
+            this.car = PIXI.Sprite.from(textures.car.texture);
+        }
+
+        render(stage, scaleCoef) {
+            this.scaleCoef = scaleCoef;
+            stage.addChild(this.car);
+
+            this.car.width = this.textures.car.size[0] * scaleCoef;
+            this.car.height = this.textures.car.size[1] * scaleCoef;
+            this.car.x = this.textures.car.startPos[0];
+            this.car.y = this.textures.car.startPos[1];
+            this.car.zIndex = 10001;
+
+            this.run();
+        }
+
+        run() {
+            const animationDuration = 1300;
+
+            const tick = (startTime) => {
+                const currentTime = Date.now();
+                const time = currentTime - startTime;
+                let stop = false;
+
+                let y, x = time / animationDuration * (this.textures.car.finalPos[0] - this.textures.car.startPos[0]) + this.textures.car.startPos[0];
+
+                if (x > this.textures.car.finalPos[0]) {
+                    x = this.textures.car.finalPos[0];
+                    y = this.textures.car.finalPos[1];
+                    stop = true;
+                } else {
+                    y = this.animationPos(x, ...this.textures.car.startPos, ...this.textures.car.finalPos);
+                }
+
+                this.car.x = x * this.scaleCoef;
+                this.car.y = y * this.scaleCoef;
+
+
+                if (!stop) {
+                    requestAnimationFrame(() => tick(startTime))
+                }
+            }
+
+            tick(Date.now())
+        }
+
+        animationPos(x, x1, y1, x2, y2) {
+            const y = (x - x1) * (y2 - y1) / (x2 - x1) + y1;
+            return y;
+        }
     }
 
     class OilGame {
@@ -494,6 +549,9 @@ function OILGame() {
 
                 this.renderEndingView(success, badcount, this.settings.badCountToLose);
             }
+
+            const car = new Car(this.currentTextures);
+            car.render(this.pixiApp.stage, this.scaleCoef());
 
             //  add Stat
             const STAT_POSITION = [10, 10];
@@ -704,7 +762,7 @@ function OILGame() {
                 }, this.settings.fishActiveTime)
             }
 
-            factories = this.currentTextures.factory.map(f => new Factory(f, this.settings));
+            factories = this.currentTextures.factory.map((f, i) => new Factory(f, this.settings, i));
             factories.forEach(f => f.drow(this.pixiApp).setPositionAndSize(this.scaleCoef()));
 
             const tick = () => {
