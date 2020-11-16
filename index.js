@@ -451,14 +451,12 @@ function OILGame() {
             this.normilizebgSize();
 
             this.pixiApp.stage.addChild(this.bgSprite);
-
             this.pixiApp.stage.sortableChildren = true;
-
 
             this.onContainerResize((event) => {
                 this.pixiApp.renderer.resize(
                     event.width,
-                    this.calculateByPropotrion(event.width, this.currentTextures.background.size[0], this.currentTextures.background.size[1])
+                    this.calculateByPropotrion(event.width * 2, this.currentTextures.background.size[0], this.currentTextures.background.size[1])
                 );
                 this.normilizebgSize();
             });
@@ -874,13 +872,13 @@ function OILGame() {
         }
 
         containerWidth() {
-            return this._containerWidth === undefined ? this._container.getBoundingClientRect().width : this._containerWidth;
+            return this._containerWidth === undefined ? this._container.getBoundingClientRect().width * 2 : this._containerWidth;
         }
 
         onContainerResize(callback) {
-            this._containerWidth = this._container.getBoundingClientRect().width;
+            this._containerWidth = this._container.getBoundingClientRect().width * 2;
             const check = () => {
-                const currentWidth = this._container.getBoundingClientRect().width;
+                const currentWidth = this._container.getBoundingClientRect().width * 2;
                 if (currentWidth !== this._containerWidth) {
                     callback({ width: currentWidth, prevWidth: this._containerWidth });
                     this._containerWidth = currentWidth;
