@@ -112,7 +112,7 @@ function OILGame() {
             {
                 url_inactive: './textures/zavod2_ne_rabotaet.png',
                 url_active: './textures/zavod2.png',
-                size: [239, 216],
+                size: [248, 210],
                 hit: [[7, 120], [121, 91], [134, 42], [211, 57], [212, 150], [198, 166], [80, 207], [6, 172]],
                 position: [30, 80],
                 trumpet: {
