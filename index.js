@@ -176,6 +176,11 @@ function OILGame() {
         constructor(textures, settings, index) {
             this.settings = settings;
 
+            PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.LINEAR;
+            PIXI.settings.MIPMAP_TEXTURES = PIXI.MIPMAP_MODES.ON;
+            PIXI.settings.RENDER_OPTIONS.antialias = true;
+            PIXI.settings.RENDER_OPTIONS.autoDensity = true;
+
             this.timeouts = [];
             this.textures = textures;
             this.factoryInactiveTexture = PIXI.Texture.from(textures.url_inactive);
@@ -183,9 +188,16 @@ function OILGame() {
             this.trumpetFixedTexture = PIXI.Texture.from(textures.trumpet.url_fixed);
             this.trumpetBrokenTexture = PIXI.Texture.from(textures.trumpet.url_broken);
 
+
+            
+
+
             this.factory = new PIXI.Sprite(this.factoryInactiveTexture);
             this.factoryActiveLayer = new PIXI.Sprite(this.factoryActiveTexture);
             this.factoryActiveLayer.alpha = 0;
+
+          
+
 
             this.trumpet = new PIXI.Sprite(this.trumpetFixedTexture);
             this.trumpetActiveLayer = new PIXI.Sprite(this.trumpetBrokenTexture);
@@ -422,7 +434,6 @@ function OILGame() {
 
             this.pixiApp = new PIXI.Application({
                 view: canvas,
-                antialiasing: true,
                 backgroundColor: 0x6b841a,
                 width: this.containerWidth(),
                 height: this.calculateByPropotrion(this.containerWidth(), this.currentTextures.background.size[0], this.currentTextures.background.size[1])
