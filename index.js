@@ -189,14 +189,14 @@ function OILGame() {
             this.trumpetBrokenTexture = PIXI.Texture.from(textures.trumpet.url_broken);
 
 
-            
+
 
 
             this.factory = new PIXI.Sprite(this.factoryInactiveTexture);
             this.factoryActiveLayer = new PIXI.Sprite(this.factoryActiveTexture);
             this.factoryActiveLayer.alpha = 0;
 
-          
+
 
 
             this.trumpet = new PIXI.Sprite(this.trumpetFixedTexture);
@@ -207,6 +207,7 @@ function OILGame() {
             this.factory.zIndex = 10000 + (index || 0);
             this.factoryActiveLayer.zIndex = 10000 + (index || 0);
             this.trumpetActiveLayer.zIndex = 10000 + (index || 0);
+
 
             this.active = false;
             this.broken = false;
@@ -288,28 +289,33 @@ function OILGame() {
         }
 
         setPositionAndSize(scaleCoef) {
+            const ts /* texture scale */ = (v) => {
+                return Math.round(v)
+            }
+
             this.factory.x = this.textures.position[0] * scaleCoef;
             this.factory.y = this.textures.position[1] * scaleCoef;
-            this.factory.width = this.textures.size[0] * scaleCoef;
-            this.factory.height = this.textures.size[1] * scaleCoef;
+            this.factory.width = ts(this.textures.size[0] * scaleCoef);
+            this.factory.height = ts(this.textures.size[1] * scaleCoef);
 
             const pos = [0, 0];
 
 
             this.factoryActiveLayer.x = this.textures.position[0] * scaleCoef;
             this.factoryActiveLayer.y = this.textures.position[1] * scaleCoef;
-            this.factoryActiveLayer.width = this.textures.size[0] * scaleCoef;
-            this.factoryActiveLayer.height = this.textures.size[1] * scaleCoef;
+            this.factoryActiveLayer.width = ts(this.textures.size[0] * scaleCoef);
+            this.factoryActiveLayer.height = ts(this.textures.size[1] * scaleCoef);
 
             this.trumpet.x = this.textures.trumpet.position[0] * scaleCoef;
             this.trumpet.y = this.textures.trumpet.position[1] * scaleCoef;
-            this.trumpet.width = this.textures.trumpet.size[0] * scaleCoef;
-            this.trumpet.height = this.textures.trumpet.size[1] * scaleCoef;
+            this.trumpet.width = ts(this.textures.trumpet.size[0] * scaleCoef);
+            this.trumpet.height = ts(this.textures.trumpet.size[1] * scaleCoef);
 
             this.trumpetActiveLayer.x = this.textures.trumpet.position[0] * scaleCoef;
             this.trumpetActiveLayer.y = this.textures.trumpet.position[1] * scaleCoef;
-            this.trumpetActiveLayer.width = this.textures.trumpet.size[0] * scaleCoef;
-            this.trumpetActiveLayer.height = this.textures.trumpet.size[1] * scaleCoef;
+            this.trumpetActiveLayer.width = ts(this.textures.trumpet.size[0] * scaleCoef);
+            this.trumpetActiveLayer.height = ts(this.textures.trumpet.size[1] * scaleCoef);
+
 
             return this;
         }
