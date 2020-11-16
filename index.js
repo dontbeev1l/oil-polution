@@ -193,7 +193,7 @@ function OILGame() {
             this.factoryActiveLayer.alpha = 0;
 
 
-            this.factoryActiveLayer.filters = [new PIXI.filters.FXAAFilter()]
+            // this.factoryActiveLayer.filters = [new PIXI.filters.FXAAFilter()]
 
 
             this.trumpet = new PIXI.Sprite(this.trumpetFixedTexture);
