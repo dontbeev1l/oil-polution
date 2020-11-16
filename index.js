@@ -34,7 +34,6 @@ function OILGame() {
             size: [67, 60]
         },
 
-
         fishIcon: {
             url: './textures/ikonka_ryby.png',
             size: [67, 60]
@@ -443,20 +442,22 @@ function OILGame() {
             this.pixiApp = new PIXI.Application({
                 view: canvas,
                 backgroundColor: 0x6b841a,
-                width: this.containerWidth(),
-                height: this.calculateByPropotrion(this.containerWidth(), this.currentTextures.background.size[0], this.currentTextures.background.size[1])
+                width: this.containerWidth() * 2,
+                height: 2 * this.calculateByPropotrion(this.containerWidth(), this.currentTextures.background.size[0], this.currentTextures.background.size[1])
             });
 
             this.bgSprite = PIXI.Sprite.from(this.currentTextures.background.url);
             this.normilizebgSize();
 
             this.pixiApp.stage.addChild(this.bgSprite);
+
             this.pixiApp.stage.sortableChildren = true;
+
 
             this.onContainerResize((event) => {
                 this.pixiApp.renderer.resize(
                     event.width,
-                    this.calculateByPropotrion(event.width * 2, this.currentTextures.background.size[0], this.currentTextures.background.size[1])
+                    this.calculateByPropotrion(event.width, this.currentTextures.background.size[0], this.currentTextures.background.size[1])
                 );
                 this.normilizebgSize();
             });
@@ -478,7 +479,8 @@ function OILGame() {
         }
 
         scaleCoef() {
-            const k = Math.round(this.containerWidth() / this.currentTextures.background.size[0] * 1000) / 1000;
+            const k = Math.round(this.containerWidth() * 2 / this.currentTextures.background.size[0] * 1000) / 1000;
+            console.log(k)
             return k;
         }
 
@@ -498,7 +500,7 @@ function OILGame() {
             if (!startButonText) {
                 startButonText = 'НАЧАТЬ УБОРКУ';
             }
-            const text = new PIXI.Text(startButonText, { fontFamily: 'Arial', fontSize: 24, fill: 0xffffff, align: 'center', fontWeight: 600 });
+            const text = new PIXI.Text(startButonText, { fontFamily: 'Arial', fontSize: 48, fill: 0xffffff, align: 'center', fontWeight: 600 });
             this.pixiApp.stage.addChild(text)
             const graphics = new PIXI.Graphics();
             graphics.interactive = true;
@@ -552,7 +554,7 @@ function OILGame() {
                 textValue = RESULT_EXELENT;
             }
             const text = new PIXI.Text(textValue,
-                { fontFamily: 'Arial', fontSize: 24, fill: 0xffffff, align: 'center', fontWeight: 600 })
+                { fontFamily: 'Arial', fontSize: 48, fill: 0xffffff, align: 'center', fontWeight: 600 })
 
 
             text.zIndex = 4;
@@ -631,7 +633,7 @@ function OILGame() {
             rubbishSprite.x = STAT_POSITION[0] * this.scaleCoef();
             rubbishSprite.y = STAT_POSITION[1] * this.scaleCoef();
 
-            const rubbishText = new PIXI.Text('0%', { fontFamily: 'Arial', fontSize: 24, fill: 0x000000, align: 'left', fotWeight: '600' });
+            const rubbishText = new PIXI.Text('0%', { fontFamily: 'Arial', fontSize: 48, fill: 0x000000, align: 'left', fotWeight: '600' });
             rubbishText.zIndex = 20000;
 
             rubbishText.x = (STAT_POSITION[0] + rubbishTextureSize[0] + STAT_MARGIN) * this.scaleCoef();
@@ -652,7 +654,7 @@ function OILGame() {
             fishSprite.y = STAT_POSITION[1] * this.scaleCoef();
 
 
-            const fishText = new PIXI.Text('100%', { fontFamily: 'Arial', fontSize: 24, fill: 0x000000, align: 'left', fotWeight: '600' });
+            const fishText = new PIXI.Text('100%', { fontFamily: 'Arial', fontSize: 48, fill: 0x000000, align: 'left', fotWeight: '600' });
             fishText.zIndex = 20000;
 
             fishText.x = fishSprite.x + fishSprite.width + STAT_MARGIN * this.scaleCoef();
@@ -664,7 +666,7 @@ function OILGame() {
             spritesForClear.push(rubbishSprite, rubbishText, fishSprite, fishText)
 
 
-            const timerText = new PIXI.Text('60', { fontFamily: 'Arial', fontSize: 24, fill: 0x000000, align: 'left', fotWeight: '600' });
+            const timerText = new PIXI.Text('60', { fontFamily: 'Arial', fontSize: 48, fill: 0x000000, align: 'left', fotWeight: '600' });
             timerText.y = STAT_POSITION[1] * this.scaleCoef()
             timerText.x = (this.currentTextures.background.size[0] - STAT_POSITION[1]) * this.scaleCoef() - timerText.width;
             this.pixiApp.stage.addChild(timerText);
@@ -872,13 +874,13 @@ function OILGame() {
         }
 
         containerWidth() {
-            return this._containerWidth === undefined ? this._container.getBoundingClientRect().width * 2 : this._containerWidth;
+            return this._containerWidth === undefined ? this._container.getBoundingClientRect().width : this._containerWidth;
         }
 
         onContainerResize(callback) {
-            this._containerWidth = this._container.getBoundingClientRect().width * 2;
+            this._containerWidth = this._container.getBoundingClientRect().width;
             const check = () => {
-                const currentWidth = this._container.getBoundingClientRect().width * 2;
+                const currentWidth = this._container.getBoundingClientRect().width;
                 if (currentWidth !== this._containerWidth) {
                     callback({ width: currentWidth, prevWidth: this._containerWidth });
                     this._containerWidth = currentWidth;
