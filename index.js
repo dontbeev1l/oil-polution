@@ -313,7 +313,6 @@ function OILGame() {
             this.trumpetActiveLayer.width = ts(this.textures.trumpet.size[0] * scaleCoef);
             this.trumpetActiveLayer.height = ts(this.textures.trumpet.size[1] * scaleCoef);
 
-
             return this;
         }
 
