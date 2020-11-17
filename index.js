@@ -182,11 +182,6 @@ function OILGame() {
             this.factoryActiveTexture = PIXI.Texture.from(textures.url_active);
             this.trumpetFixedTexture = PIXI.Texture.from(textures.trumpet.url_fixed);
             this.trumpetBrokenTexture = PIXI.Texture.from(textures.trumpet.url_broken);
-
-
-
-
-
             this.factory = new PIXI.Sprite(this.factoryInactiveTexture);
             this.factoryActiveLayer = new PIXI.Sprite(this.factoryActiveTexture);
             this.factoryActiveLayer.alpha = 0;
@@ -359,7 +354,7 @@ function OILGame() {
             this.car.height = this.textures.car.size[1] * scaleCoef;
             this.car.x = this.textures.car.startPos[0];
             this.car.y = this.textures.car.startPos[1];
-            this.car.zIndex = 10001;
+            this.car.zIndex = 10000;
 
             this.run();
         }
@@ -427,24 +422,21 @@ function OILGame() {
         constructor(container, canvas, settings) {
             this.settings = settings;
 
-            // PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.LINEAR;
-            // PIXI.settings.MIPMAP_TEXTURES = PIXI.MIPMAP_MODES.ON;
-            // PIXI.settings.RENDER_OPTIONS.antialias = true;
-            // PIXI.settings.RENDER_OPTIONS.autoDensity = true;
-            // PIXI.settings.RENDER_OPTIONS.forceFXAA = true;
-            // console.log(PIXI.settings)
-
             this.currentTextures = TEXTURE_PACK_1;
 
             this._container = container;
             this._canvas = canvas;
 
+            const height = this.calculateByPropotrion(this.containerWidth(), this.currentTextures.background.size[0], this.currentTextures.background.size[1]);
+
             this.pixiApp = new PIXI.Application({
                 view: canvas,
                 backgroundColor: 0x6b841a,
                 width: this.containerWidth() * 2,
-                height: 2 * this.calculateByPropotrion(this.containerWidth(), this.currentTextures.background.size[0], this.currentTextures.background.size[1])
+                height: height * 2
             });
+
+            this._container.style.height = `${height}px`
 
             this.bgSprite = PIXI.Sprite.from(this.currentTextures.background.url);
             this.normilizebgSize();
@@ -455,10 +447,13 @@ function OILGame() {
 
 
             this.onContainerResize((event) => {
+                const height = this.calculateByPropotrion(event.width, this.currentTextures.background.size[0], this.currentTextures.background.size[1])
+                    
                 this.pixiApp.renderer.resize(
                     event.width,
-                    this.calculateByPropotrion(event.width, this.currentTextures.background.size[0], this.currentTextures.background.size[1])
+                    height
                 );
+                this._container.style.height = `${height}px`
                 this.normilizebgSize();
             });
             this.renderMenu();
@@ -480,7 +475,6 @@ function OILGame() {
 
         scaleCoef() {
             const k = Math.round(this.containerWidth() * 2 / this.currentTextures.background.size[0] * 1000) / 1000;
-            console.log(k)
             return k;
         }
 
@@ -560,7 +554,7 @@ function OILGame() {
             text.zIndex = 4;
             this.pixiApp.stage.addChild(text);
 
-            const maxTextWidth = 500;
+            const maxTextWidth = 900;
             const [width, height] = [text.width, text.height];
             text.width = Math.min(maxTextWidth, this.pixiApp.renderer.width - 20);
             text.height = text.width / width * height;
@@ -616,7 +610,7 @@ function OILGame() {
             timeoutsForGameover.push(setTimeout(() => {
                 car.render(this.pixiApp.stage, this.scaleCoef());
                 carActive = true;
-            }, 35000))
+            }, 50000))
 
             //  add Stat
             const STAT_POSITION = [10, 10];
@@ -703,7 +697,6 @@ function OILGame() {
                 const itemIndex = random(this.currentTextures.badItems.length - 1);
                 const textureSize = this.currentTextures.badItems[itemIndex].size;
                 const showTexture = PIXI.Texture.from(this.currentTextures.badItems[itemIndex].url_show);
-                const defaultTexture = PIXI.Texture.from(this.currentTextures.badItems[itemIndex].url_default);
 
                 const oil = new PIXI.Sprite(showTexture);
                 oil.anchor.set(0.5);
@@ -750,8 +743,8 @@ function OILGame() {
                 }, this.settings.badItemActiveTime)
 
                 setTimeout(() => {
-                    if (!oil._destroyed) {
-                        oil.texture = defaultTexture;
+                    if (oil._destroyed) {
+                        return;
                     }
 
                     const animationTick = (startTime) => {
@@ -843,7 +836,7 @@ function OILGame() {
                 }
 
                 if (carActive) {
-                    complexity += 1;
+                    complexity += 8;
                 }
 
                 nextTickDelay -= complexity * this.settings.tickTimeSubtractPerComplexity;
