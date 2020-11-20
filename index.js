@@ -90,7 +90,8 @@ function OILGame() {
             [50, 953],
             [50, 370],
             [355, 275],
-            [375, 323],
+            [457, 310],
+            [547, 287],
             [775, 130],
             [760, 663],
             [545, 815],
@@ -565,7 +566,7 @@ function OILGame() {
                 textValue = RESULT_EXELENT;
             }
             const text = new PIXI.Text(textValue,
-                { fontFamily: 'Arial', fontSize: 48, fill: 0xffffff, align: 'center', fontWeight: 600 })
+                { fontFamily: 'Arial', fontSize: 48, fill: 0xffffff, align: 'center', fontWeight: 600, stroke: 0x000000, strokeThickness: 3})
 
 
             text.zIndex = 4;
@@ -770,6 +771,7 @@ function OILGame() {
                 oil.interactive = true;
                 oil.on('pointerdown', () => {
                     oil.destroy({ children: true, texture: false, baseTexture: false });
+                    RENDERED_POINTS.splice(RENDERED_POINTS.indexOf(point), 1);
                     clearTimeout(timeout)
                 })
                 this.pixiApp.stage.addChild(oil);
@@ -779,6 +781,7 @@ function OILGame() {
                     badcount++;
                     updateStat();
                     oil.destroy({ children: true, texture: false, baseTexture: false });
+                    RENDERED_POINTS.splice(RENDERED_POINTS.indexOf(point), 1);
                 }, this.settings.badItemActiveTime)
 
                 setTimeout(() => {
@@ -819,7 +822,8 @@ function OILGame() {
 
                 fish.anchor.set(0.5);
 
-                const point = Geometry.randomPointInPath(this.currentTextures.riverPath);
+                const point = Geometry.randomPointInPath(this.currentTextures.riverPath, RENDERED_POINTS, 60);
+                RENDERED_POINTS.push(point);
 
                 fish.x = (point[0]) * this.scaleCoef();
                 fish.y = (point[1]) * this.scaleCoef();
@@ -832,6 +836,7 @@ function OILGame() {
 
                 fish.on('pointerdown', () => {
                     fish.destroy({ children: true, texture: false, baseTexture: false });
+                    RENDERED_POINTS.splice(RENDERED_POINTS.indexOf(point), 1);
                     fishCount++;
                     clearTimeout(timeout);
                     updateStat();
@@ -859,6 +864,7 @@ function OILGame() {
                 timeout = setTimeout(() => {
                     if (fish._destroyed) { return; }
                     fish.destroy({ children: true, texture: false, baseTexture: false });
+                    RENDERED_POINTS.splice(RENDERED_POINTS.indexOf(point), 1);
                 }, this.settings.fishActiveTime)
             }
 
