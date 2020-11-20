@@ -190,7 +190,7 @@ function OILGame() {
     }
 
     class Factory {
-        constructor(textures, settings, index) {
+        constructor(textures, settings, index, brokeInterval) {
             this.settings = settings;
 
 
@@ -233,7 +233,7 @@ function OILGame() {
                 this.trumpet.hitArea = hitPoly;
             }
 
-            setTimeout(() => { this.broke() }, random(30, 3) * 1000);
+            setTimeout(() => { this.broke() }, random(...brokeInterval) * 1000);
         }
 
 
@@ -861,19 +861,17 @@ function OILGame() {
                 }, this.settings.fishActiveTime)
             }
 
-            factories = this.currentTextures.factory.map((f, i) => new Factory(f, this.settings, i));
+            const brokeIntervals = [[0, 10], [0, 10], [10, 20], [10, 20]].sort(() => Math.random() - 0.5);
+
+            factories = this.currentTextures.factory.map((f, i) => new Factory(f, this.settings, i, brokeIntervals[i]));
             const active1 = random(0, 1);
             const active2 = random(2, 3);
             factories[active1].activate();
             factories[active2].activate();
 
-
-
-            let activateNext1Time = random(8, 15) * 1000;
             timeoutsForGameover.push(setTimeout(() => {
                 factories[active1 == 0 ? 1 : 0].activate()
-                console.log('ACTIVATE NEXT activateNext1Time', activateNext1Time)
-            }, activateNext1Time));
+            }, random(8, 15) * 1000));
 
             timeoutsForGameover.push(setTimeout(() => {
                 factories[active1 == 2 ? 3 : 2].activate()
