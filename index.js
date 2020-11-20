@@ -233,8 +233,7 @@ function OILGame() {
                 this.trumpet.hitArea = hitPoly;
             }
 
-            this.activate();
-            setTimeout(() => { this.broke() }, random(10, 3) * 1000);
+            setTimeout(() => { this.broke() }, random(30, 3) * 1000);
         }
 
 
@@ -863,6 +862,23 @@ function OILGame() {
             }
 
             factories = this.currentTextures.factory.map((f, i) => new Factory(f, this.settings, i));
+            const active1 = random(0, 1);
+            const active2 = random(2, 3);
+            factories[active1].activate();
+            factories[active2].activate();
+
+
+
+            let activateNext1Time = random(8, 15) * 1000;
+            timeoutsForGameover.push(setTimeout(() => {
+                factories[active1 == 0 ? 1 : 0].activate()
+                console.log('ACTIVATE NEXT activateNext1Time', activateNext1Time)
+            }, activateNext1Time));
+
+            timeoutsForGameover.push(setTimeout(() => {
+                factories[active1 == 2 ? 3 : 2].activate()
+            }, random(12, 20) * 1000))
+
             factories.forEach(f => f.drow(this.pixiApp).setPositionAndSize(this.scaleCoef()));
 
             const tick = () => {
