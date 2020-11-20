@@ -6,6 +6,8 @@ const SETTINGS = {
     badItemActiveTime: 4000,
     fishActiveTime: 1000,
 
+    carComplexityTimeCoef: 2,
+
     tickTimeBase: 4000,
     tickTimeSubtractPerComplexity: 100,
 
@@ -47,23 +49,33 @@ function OILGame() {
         badItems: [
             {
                 url_show: './textures/dokhlaya_ryba11.png',
-                url_default: './textures/dokhlaya_ryba1.png',
-                size: [143, 69]
+                size: [143, 69],
+                coef: 3
             },
             {
                 url_show: './textures/sgustok1.png',
-                url_default: './textures/sgustok11.png',
-                size: [148, 48]
+                size: [148, 48],
+                coef: 3
             },
             {
                 url_show: './textures/sgustok2.png',
-                url_default: './textures/sgustok21.png',
-                size: [153, 35]
+                size: [153, 35],
+                coef: 3
             },
             {
                 url_show: './textures/sgustok3.png',
-                url_default: './textures/sgustok31.png',
-                size: [108, 55]
+                size: [108, 55],
+                coef: 3
+            },
+            {
+                url_show: './textures/musor.png',
+                size: [145, 112],
+                coef: 3
+            },
+            {
+                url_show: './textures/musor_soda1.png',
+                size: [145, 112],
+                coef: 1
             }
         ],
         goodItems: [
@@ -717,7 +729,11 @@ function OILGame() {
                 // point = [0, 0]
                 let OIL_SIZE_SCALE_COEF = random(8, 10) / 10;
                 let timeout;
-                const itemIndex = random(this.currentTextures.badItems.length - 1);
+                const indexesByCoef = [];
+                this.currentTextures.badItems.forEach((i, index) => indexesByCoef.push(...new Array(i.coef).fill(index)));
+                indexesByCoef.sort(() => Math.random() - 0.5)
+                // const itemIndex = random(this.currentTextures.badItems.length - 1);
+                const itemIndex = indexesByCoef[random(indexesByCoef.length - 1)];
                 const textureSize = this.currentTextures.badItems[itemIndex].size;
                 const showTexture = PIXI.Texture.from(this.currentTextures.badItems[itemIndex].url_show);
 
@@ -858,11 +874,11 @@ function OILGame() {
                     complexity += f.broken ? 1 : 0;
                 }
 
-                if (carActive) {
-                    complexity += 8;
-                }
-
                 nextTickDelay -= complexity * this.settings.tickTimeSubtractPerComplexity;
+
+                if (carActive) {
+                    nextTickDelay /= this.settings.carComplexityTimeCoef;
+                }
 
                 addOil(Geometry.randomPointInPath(this.currentTextures.riverPath, RENDERED_POINTS, 90));
 
@@ -1027,7 +1043,8 @@ const SETTINGS_DESCRIPTION = {
 
 
     reopenTrumpetDelayFrom: 'Время через которое сломается труба (ОТ)',
-    reopenTrumpetDelayTo: 'Время через которое сломается труба (ДО)'
+    reopenTrumpetDelayTo: 'Время через которое сломается труба (ДО)',
+    carComplexityTimeCoef: 'Во сколько раз уменьшается время тика (каждый тик появляется грязь)'
 };
 
 // DEBUG SEttings = 
