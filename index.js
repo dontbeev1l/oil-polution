@@ -38,7 +38,7 @@ function OILGame() {
 
         fishIcon: {
             url: './textures/ikonka_ryby.png',
-            size: [67, 60]
+            size: [71, 57]
         },
 
         timerIcon: {
@@ -566,7 +566,7 @@ function OILGame() {
                 textValue = RESULT_EXELENT;
             }
             const text = new PIXI.Text(textValue,
-                { fontFamily: 'Arial', fontSize: 48, fill: 0xffffff, align: 'center', fontWeight: 600, stroke: 0x000000, strokeThickness: 3})
+                { fontFamily: 'Arial', fontSize: 48, fill: 0xffffff, align: 'center', fontWeight: 600, stroke: 0x000000, strokeThickness: 3 })
 
 
             text.zIndex = 4;
@@ -638,7 +638,7 @@ function OILGame() {
             const rubbishTextureSize = this.currentTextures.rubbishIcon.size;
             const rubbishSprite = new PIXI.Sprite(rubbishTexture);
             rubbishSprite.zIndex = 20000;
-            const textStyle = { fontFamily: 'Arial', fontSize: 48, fill: 0xffffff, align: 'left', fotWeight: '600', stroke: 0x000000, strokeThickness: 3};
+            const textStyle = { fontFamily: 'Arial', fontSize: 48, fill: 0xffffff, align: 'left', fotWeight: '600', stroke: 0x000000, strokeThickness: 3 };
 
             rubbishSprite.width = rubbishTextureSize[0] * this.scaleCoef();
             rubbishSprite.height = rubbishTextureSize[1] * this.scaleCoef();
@@ -691,9 +691,9 @@ function OILGame() {
             timerText.y = STAT_POSITION[1] * this.scaleCoef() + (timerSprite.height - timerText.height) / 2;
             timerText.x = (this.currentTextures.background.size[0] - STAT_POSITION[1]) * this.scaleCoef() - timerText.width;
 
-            timerSprite.x = (this.currentTextures.background.size[0] - STAT_POSITION[1]) * this.scaleCoef() - timerText.width 
-                    - timerSprite.width - STAT_MARGIN * this.scaleCoef();
-            timerSprite.y = STAT_POSITION[1] * this.scaleCoef() ;
+            timerSprite.x = (this.currentTextures.background.size[0] - STAT_POSITION[1]) * this.scaleCoef() - timerText.width
+                - timerSprite.width - STAT_MARGIN * this.scaleCoef();
+            timerSprite.y = STAT_POSITION[1] * this.scaleCoef();
 
             this.pixiApp.stage.addChild(timerText);
             this.pixiApp.stage.addChild(timerSprite);
@@ -777,11 +777,13 @@ function OILGame() {
                 this.pixiApp.stage.addChild(oil);
 
                 timeout = setTimeout(() => {
-                    oil.interactive = false;
-                    badcount++;
-                    updateStat();
-                    oil.destroy({ children: true, texture: false, baseTexture: false });
-                    RENDERED_POINTS.splice(RENDERED_POINTS.indexOf(point), 1);
+                    if (!oil._destroyed) {
+                        oil.interactive = false;
+                        badcount++;
+                        updateStat();
+                        oil.destroy({ children: true, texture: false, baseTexture: false });
+                        RENDERED_POINTS.splice(RENDERED_POINTS.indexOf(point), 1);
+                    }
                 }, this.settings.badItemActiveTime)
 
                 setTimeout(() => {
