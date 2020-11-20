@@ -39,6 +39,11 @@ function OILGame() {
             size: [67, 60]
         },
 
+        timerIcon: {
+            url: './textures/timer.png',
+            size: [60, 60]
+        },
+
         badItems: [
             {
                 url_show: './textures/dokhlaya_ryba11.png',
@@ -115,8 +120,9 @@ function OILGame() {
                 hit: [[7, 120], [121, 91], [134, 42], [211, 57], [212, 150], [198, 166], [80, 207], [6, 172]],
                 position: [30, 80],
                 trumpet: {
-                    url_fixed: './textures/truba22.png',
-                    url_broken: './textures/truba2.png',
+                    url_fixed: './textures/truba2.png',
+                    url_broken: './textures/truba22.png',
+                    hit: [1, 12, 4, 1, 23, 1, 50, 13, 67, 30, 69, 37, 69, 80, 79, 86, 80, 93, 70, 103, 46, 105, 30, 97, 29, 96, 29, 88, 36, 81, 40, 79, 41, 39, 31, 25],
                     size: [112, 117],
                     position: [180, 230]
                 }
@@ -448,7 +454,7 @@ function OILGame() {
 
             this.onContainerResize((event) => {
                 const height = this.calculateByPropotrion(event.width, this.currentTextures.background.size[0], this.currentTextures.background.size[1])
-                    
+
                 this.pixiApp.renderer.resize(
                     event.width,
                     height
@@ -620,6 +626,7 @@ function OILGame() {
             const rubbishTextureSize = this.currentTextures.rubbishIcon.size;
             const rubbishSprite = new PIXI.Sprite(rubbishTexture);
             rubbishSprite.zIndex = 20000;
+            const textStyle = { fontFamily: 'Arial', fontSize: 48, fill: 0xffffff, align: 'left', fotWeight: '600', stroke: 0x000000, strokeThickness: 3};
 
             rubbishSprite.width = rubbishTextureSize[0] * this.scaleCoef();
             rubbishSprite.height = rubbishTextureSize[1] * this.scaleCoef();
@@ -627,7 +634,7 @@ function OILGame() {
             rubbishSprite.x = STAT_POSITION[0] * this.scaleCoef();
             rubbishSprite.y = STAT_POSITION[1] * this.scaleCoef();
 
-            const rubbishText = new PIXI.Text('0%', { fontFamily: 'Arial', fontSize: 48, fill: 0x000000, align: 'left', fotWeight: '600' });
+            const rubbishText = new PIXI.Text('0%', textStyle);
             rubbishText.zIndex = 20000;
 
             rubbishText.x = (STAT_POSITION[0] + rubbishTextureSize[0] + STAT_MARGIN) * this.scaleCoef();
@@ -648,7 +655,7 @@ function OILGame() {
             fishSprite.y = STAT_POSITION[1] * this.scaleCoef();
 
 
-            const fishText = new PIXI.Text('100%', { fontFamily: 'Arial', fontSize: 48, fill: 0x000000, align: 'left', fotWeight: '600' });
+            const fishText = new PIXI.Text('100%', textStyle);
             fishText.zIndex = 20000;
 
             fishText.x = fishSprite.x + fishSprite.width + STAT_MARGIN * this.scaleCoef();
@@ -660,11 +667,26 @@ function OILGame() {
             spritesForClear.push(rubbishSprite, rubbishText, fishSprite, fishText)
 
 
-            const timerText = new PIXI.Text('60', { fontFamily: 'Arial', fontSize: 48, fill: 0x000000, align: 'left', fotWeight: '600' });
-            timerText.y = STAT_POSITION[1] * this.scaleCoef()
+
+            const timerSprite = PIXI.Sprite.from(this.currentTextures.timerIcon.url);
+            const timerTextureSize = this.currentTextures.timerIcon.size;
+
+            timerSprite.width = timerTextureSize[0] * this.scaleCoef();
+            timerSprite.height = timerTextureSize[1] * this.scaleCoef();
+
+            const timerText = new PIXI.Text('60', textStyle);
+
+            timerText.y = STAT_POSITION[1] * this.scaleCoef() + (timerSprite.height - timerText.height) / 2;
             timerText.x = (this.currentTextures.background.size[0] - STAT_POSITION[1]) * this.scaleCoef() - timerText.width;
+
+            timerSprite.x = (this.currentTextures.background.size[0] - STAT_POSITION[1]) * this.scaleCoef() - timerText.width 
+                    - timerSprite.width - STAT_MARGIN * this.scaleCoef();
+            timerSprite.y = STAT_POSITION[1] * this.scaleCoef() ;
+
             this.pixiApp.stage.addChild(timerText);
+            this.pixiApp.stage.addChild(timerSprite);
             timerText.zIndex = 20000;
+            timerSprite.zIndex = 20000;
 
             intervalForGameover.push(setInterval(() => {
                 time--;
@@ -675,6 +697,7 @@ function OILGame() {
                 }
             }, 1000));
             spritesForClear.push(timerText);
+            spritesForClear.push(timerSprite);
 
             const updateStat = () => {
                 if (rubbishText._destroyed) { return; }
