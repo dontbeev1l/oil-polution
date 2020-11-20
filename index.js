@@ -778,6 +778,7 @@ function OILGame() {
                     oil.interactive = false;
                     badcount++;
                     updateStat();
+                    oil.destroy({ children: true, texture: false, baseTexture: false });
                 }, this.settings.badItemActiveTime)
 
                 setTimeout(() => {
