@@ -883,7 +883,7 @@ function OILGame() {
             }, random(8, 15) * 1000));
 
             timeoutsForGameover.push(setTimeout(() => {
-                factories[active1 == 2 ? 3 : 2].activate()
+                factories[active2 == 2 ? 3 : 2].activate()
             }, random(12, 20) * 1000))
 
             factories.forEach(f => f.drow(this.pixiApp).setPositionAndSize(this.scaleCoef()));
