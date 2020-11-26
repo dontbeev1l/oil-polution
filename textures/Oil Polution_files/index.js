@@ -435,7 +435,7 @@ function OILGame() {
     }
 
     class OilGame {
-        onShare = () => { };
+        onShare = () => {};
 
         constructor(container, canvas, settings) {
             this.settings = settings;
@@ -551,7 +551,7 @@ function OILGame() {
             });
         }
 
-        renderEndingView(success, badcount, badCountToLose, fishCount, fishCountToLose) {
+        renderEndingView(success, badcount, badCountToLose) {
 
             const textStyle = { fontFamily: 'Arial', fontSize: 48, fill: 0xffffff, align: 'left', fotWeight: '600', stroke: 0x000000, strokeThickness: 3 };
 
@@ -564,7 +564,7 @@ function OILGame() {
             const fishSprite = PIXI.Sprite.from(this.currentTextures.fishIcon.url);
 
             const rubbishText = new PIXI.Text(`${Math.round(badcount / badCountToLose * 100)}%`, textStyle);
-            const fishText = new PIXI.Text(`${(fishCountToLose - fishCount) / fishCountToLose * 100}%`, textStyle);
+            const fishText = new PIXI.Text('100%', textStyle);
 
             [rubbishSprite, fishSprite, rubbishText, fishText].forEach((s) => s.zIndex = 4000);
 
@@ -634,19 +634,12 @@ function OILGame() {
             fbSprite.interactive = true;
             vkSprite.interactive = true;
 
-
             fbSprite.on('pointerdown', () => {
-                this.onShare('fb', {
-                    badcount, badCountToLose, fishCount, fishCountToLose, rubbishText: `${Math.round(badcount / badCountToLose * 100)}%`,
-                    fishText: `${(fishCountToLose - fishCount) / fishCountToLose * 100}%`
-                });
+                this.onShare('fb', badcount)
             })
 
             vkSprite.on('pointerdown', () => {
-                this.onShare('vk', {
-                    badcount, badCountToLose, fishCount, fishCountToLose, rubbishText: `${Math.round(badcount / badCountToLose * 100)}%`,
-                    fishText: `${(fishCountToLose - fishCount) / fishCountToLose * 100}%`
-                });
+                this.onShare('vk', badcount)
             })
 
             this.renderMenu('ЕЩЕ РАЗ', text.y + text.height + 15 + 3 * margin + rubbishText.height,
@@ -658,7 +651,7 @@ function OILGame() {
             const spritesForClear = [];
             const intervalForGameover = [];
             const fnForGameOver = [];
-            let time = 60;
+            let time = 5;
 
             let fishCount = 0;
 
@@ -688,7 +681,7 @@ function OILGame() {
 
                 fnForGameOver.forEach((fn) => fn());
 
-                this.renderEndingView(success, badcount, this.settings.badCountToLose, fishCount, this.settings.fishCountToLose);
+                this.renderEndingView(success, badcount, this.settings.badCountToLose);
             }
 
             let carActive = false;
