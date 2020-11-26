@@ -26,6 +26,8 @@ const SETTINGS = {
 
 function OILGame() {
     const TEXTURE_PACK_1 = {
+        vk: './textures/vk.svg',
+        fb: './textures/fb.png',
         background: {
             size: [798, 1000],
             url: './textures/fon.png'
@@ -171,11 +173,7 @@ function OILGame() {
         ]
     }
 
-    const RESULT_NO_FISH_NO_SWIM = `Никакой больше рыбы и купаний.\nК реке лучше вообще теперь не подходить.\nПопробуй все исправить еще раз`;
-    const RESULT_BAD = `Спасти реку еще можно,\nно стоить это будет очень и очень дорого.\nНужно было стараться больше`;
-    const RESULT_NO_BAD = `Купаться в реке больше не стоит\nв ближайшие годы, да и рядом лучше не стоять.\nУ тебя еще есть шанс исправить все`;
-    const RESULT_GOOD = `Прекрасно!\nЧерез пару недель тут даже купаться можно будет`;
-    const RESULT_EXELENT = 'Профессиональная работа!\nРека спасена!'
+    const RESUL_TEXT = `На реке наступило затишье.\nНо надолго ли?`;
 
     function random(to, from) {
         if (!from) { from = 0; }
@@ -437,6 +435,8 @@ function OILGame() {
     }
 
     class OilGame {
+        onShare = () => {};
+
         constructor(container, canvas, settings) {
             this.settings = settings;
 
@@ -553,18 +553,46 @@ function OILGame() {
 
         renderEndingView(success, badcount, badCountToLose) {
 
+
+
+            const textStyle = { fontFamily: 'Arial', fontSize: 48, fill: 0xffffff, align: 'left', fotWeight: '600', stroke: 0x000000, strokeThickness: 3 };
+
+            const margin = 20 * this.scaleCoef();
+
+            const rubbishTextureSize = this.currentTextures.rubbishIcon.size;
+            const fishTextureSize = this.currentTextures.fishIcon.size;
+
+            const rubbishSprite = PIXI.Sprite.from(this.currentTextures.rubbishIcon.url);
+            const fishSprite = PIXI.Sprite.from(this.currentTextures.fishIcon.url);
+
+            const rubbishText = new PIXI.Text('0%', textStyle);
+            const fishText = new PIXI.Text('100%', textStyle);
+
+            [rubbishSprite, fishSprite, rubbishText, fishText].forEach((s) => s.zIndex = 4000);
+
+            fishSprite.width = fishTextureSize[0] * this.scaleCoef();
+            fishSprite.height = fishTextureSize[1] * this.scaleCoef();
+            rubbishSprite.width = rubbishTextureSize[0] * this.scaleCoef();
+            rubbishSprite.height = rubbishTextureSize[1] * this.scaleCoef();
+
+            const fullWidth = fishSprite.width + rubbishSprite.width + rubbishText.width + fishText.width + 3 * margin;
+
+            const leftMarginForCentering = (this.pixiApp.renderer.width - fullWidth) / 2;
+
+            rubbishSprite.x = leftMarginForCentering;
+            rubbishText.x = rubbishSprite.x + rubbishSprite.width + margin;
+            fishSprite.x = rubbishText.x + rubbishText.width + margin;
+            fishText.x = fishSprite.x + fishSprite.width + margin;
+
+            this.pixiApp.stage.addChild(rubbishSprite);
+            this.pixiApp.stage.addChild(rubbishText);
+            this.pixiApp.stage.addChild(fishText);
+            this.pixiApp.stage.addChild(fishSprite);
+
+
             let textValue;
-            if (badcount > 8) {
-                textValue = RESULT_NO_FISH_NO_SWIM
-            } else if (badcount > 6) {
-                textValue = RESULT_BAD
-            } else if (badcount > 3) {
-                textValue = RESULT_NO_BAD
-            } else if (badcount > 1) {
-                textValue = RESULT_GOOD
-            } else if (badcount === 0) {
-                textValue = RESULT_EXELENT;
-            }
+            textValue = RESUL_TEXT;
+
             const text = new PIXI.Text(textValue,
                 { fontFamily: 'Arial', fontSize: 48, fill: 0xffffff, align: 'center', fontWeight: 600, stroke: 0x000000, strokeThickness: 3 })
 
@@ -577,10 +605,47 @@ function OILGame() {
             text.width = Math.min(maxTextWidth, this.pixiApp.renderer.width - 20);
             text.height = text.width / width * height;
             text.x = (this.pixiApp.renderer.width - text.width) / 2;
-            text.y = (this.pixiApp.renderer.height - text.height - 75) / 2;
+            text.y = (this.pixiApp.renderer.height - text.height - 75) / 2 - rubbishText.height / 2 - margin;
+
+            rubbishSprite.y = text.y + margin + text.height;
+            rubbishText.y = rubbishSprite.y + (rubbishSprite.height - rubbishText.height) / 2;
+            fishSprite.y = rubbishSprite.y;
+            fishText.y = fishSprite.y + (fishSprite.height - fishText.height) / 2;
+
+            const vkSprite = PIXI.Sprite.from(this.currentTextures.vk);
+            const fbSprite = PIXI.Sprite.from(this.currentTextures.fb);
+
+            const SOC_SPRITE_SIZE = 70;
+            vkSprite.width = SOC_SPRITE_SIZE * this.scaleCoef();
+            vkSprite.height = SOC_SPRITE_SIZE * this.scaleCoef();
+            fbSprite.width = SOC_SPRITE_SIZE * this.scaleCoef();
+            fbSprite.height = SOC_SPRITE_SIZE * this.scaleCoef();
 
 
-            this.renderMenu('ЕЩЕ РАЗ', text.y + text.height + 15, () => { text.destroy({}) })
+            vkSprite.y = text.y + text.height + 15 + 3 * margin + rubbishText.height + 48 + 100 * this.scaleCoef();
+            fbSprite.y = vkSprite.y;
+            vkSprite.x = this.pixiApp.renderer.width / 2 - vkSprite.width - margin / 2;
+            fbSprite.x = this.pixiApp.renderer.width / 2 + margin / 2;
+
+            vkSprite.zIndex = 3000;
+            fbSprite.zIndex = 3000;
+
+            this.pixiApp.stage.addChild(vkSprite);
+            this.pixiApp.stage.addChild(fbSprite);
+
+            fbSprite.interactive = true;
+            vkSprite.interactive = true;
+
+            fbSprite.on('pointerdown', () => {
+                this.onShare('fb')
+            })
+
+            vkSprite.on('pointerdown', () => {
+                this.onShare('vk')
+            })
+
+            this.renderMenu('ЕЩЕ РАЗ', text.y + text.height + 15 + 3 * margin + rubbishText.height,
+                () => { [rubbishSprite, rubbishText, fishSprite, fishText, text, vkSprite, fbSprite].forEach(S => S.destroy({})) })
         }
 
         startGame() {
@@ -1045,7 +1110,7 @@ function OILGame() {
     return new OilGame(document.getElementsByClassName('container')[0], document.getElementById('oilGame'), SETTINGS);
 }
 
-OILGame();
+OILGame().onShare = console.log;
 
 const SETTINGS_DESCRIPTION = {
     badCountToLose: 'Сколько пропустить плохих, чтобы проиграть',
