@@ -1,30 +1,8 @@
 
-const SETTINGS = {
-    badCountToLose: 10,
-    fishCountToLose: 3,
-    itemAnimationDuration: 200,
-    badItemActiveTime: 3800,
-    fishActiveTime: 3800,
-
-    carComplexityTimeCoef: 2,
-
-    tickTimeBase: 2900,
-    tickTimeSubtractPerComplexity: 270,
-
-    factoryClickCount: 1,
-    trumpetClickCount: 1,
 
 
-    reopenFactoryDelayFrom: 4,
-    reopenFactoryDelayTo: 5,
 
-
-    reopenTrumpetDelayFrom: 4,
-    reopenTrumpetDelayTo: 5
-}
-
-
-function OILGame() {
+function OILGame(settings) {
     const TEXTURE_PACK_1 = {
         vk: './textures/vk.svg',
         fb: './textures/fb.png',
@@ -1129,10 +1107,27 @@ function OILGame() {
         }
     }
 
-    return new OilGame(document.getElementsByClassName('container')[0], document.getElementById('oilGame'), SETTINGS);
+    return new OilGame(document.getElementById('oilGameContainer'), document.getElementById('oilGameCanvas'), settings);
 }
 
-OILGame().onShare = console.log;
+const SETTINGS = {
+    badCountToLose: 10,
+    fishCountToLose: 3,
+    itemAnimationDuration: 200,
+    badItemActiveTime: 3800,
+    fishActiveTime: 3800,
+    carComplexityTimeCoef: 2,
+    tickTimeBase: 2900,
+    tickTimeSubtractPerComplexity: 270,
+    factoryClickCount: 1,
+    trumpetClickCount: 1,
+    reopenFactoryDelayFrom: 4,
+    reopenFactoryDelayTo: 5,
+    reopenTrumpetDelayFrom: 4,
+    reopenTrumpetDelayTo: 5
+}
+
+OILGame(SETTINGS).onShare = console.log;
 
 // const SETTINGS_DESCRIPTION = {
 //     badCountToLose: 'Сколько пропустить плохих, чтобы проиграть',

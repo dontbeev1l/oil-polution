@@ -17,23 +17,26 @@
             justify-content: center;
         }
 
-        .container {
-            max-width: 700px;
-            width: 100%;
-            overflow: hidden;
-        }
-
-        .container canvas {
-            transform-origin: 0 0;
-            transform: scale(.5);
-        }
+        
     </style>
 </head>
 <body>
 
     <div class="wrapper">
-        <div class="container">
-            <canvas id="oilGame"></canvas>
+        <style>
+            .oilGameContainer {
+                max-width: 700px;
+                width: 100%;
+                overflow: hidden;
+            }
+
+            .oilGameCanvas {
+                transform-origin: 0 0;
+                transform: scale(.5);
+            }
+        </style>
+        <div id="oilGameContainer">
+            <canvas id="oilGameCanvas"></canvas>
         </div>
     </div>
 
