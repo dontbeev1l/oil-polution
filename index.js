@@ -2,66 +2,66 @@
 
 
 
-function OILGame(settings) {
+function OILGame(settings, texturesPath) {
     const TEXTURE_PACK_1 = {
-        vk: './textures/vk.svg',
-        fb: './textures/fb.png',
+        vk: texturesPath + 'vk.svg',
+        fb: texturesPath + 'fb.png',
         background: {
             size: [798, 1000],
-            url: './textures/fon.png'
+            url: texturesPath + 'fon.png'
         },
 
         rubbishIcon: {
-            url: './textures/ikonka_musor.png',
+            url: texturesPath + 'ikonka_musor.png',
             size: [67, 60]
         },
 
         fishIcon: {
-            url: './textures/ikonka_ryby.png',
+            url: texturesPath + 'ikonka_ryby.png',
             size: [71, 57]
         },
 
         timerIcon: {
-            url: './textures/timer.png',
+            url: texturesPath + 'timer.png',
             size: [60, 60]
         },
 
         badItems: [
             {
-                url_show: './textures/dokhlaya_ryba11.png',
+                url_show: texturesPath + 'dokhlaya_ryba11.png',
                 size: [143, 69],
                 coef: 3
             },
             {
-                url_show: './textures/sgustok1.png',
+                url_show: texturesPath + 'sgustok1.png',
                 size: [148, 48],
                 coef: 3
             },
             {
-                url_show: './textures/sgustok2.png',
+                url_show: texturesPath + 'sgustok2.png',
                 size: [153, 35],
                 coef: 3
             },
             {
-                url_show: './textures/sgustok3.png',
+                url_show: texturesPath + 'sgustok3.png',
                 size: [108, 55],
                 coef: 3
             },
             {
-                url_show: './textures/musor.png',
+                url_show: texturesPath + 'musor.png',
                 size: [145, 112],
                 coef: 3
             },
             {
-                url_show: './textures/musor_soda1.png',
+                url_show: texturesPath + 'musor_soda1.png',
                 size: [145, 112],
                 coef: 1
             }
         ],
         goodItems: [
             {
-                url_show: './textures/zhivaya_ryba.png',
-                url_default: './textures/zhivaya_ryba1.png',
+                url_show: texturesPath + 'zhivaya_ryba.png',
+                url_default: texturesPath + 'zhivaya_ryba1.png',
                 size: [128, 60]
             }
         ],
@@ -95,12 +95,12 @@ function OILGame(settings) {
         ],
 
         car: {
-            texture: './textures/mashina.png',
+            texture: texturesPath + 'mashina.png',
             size: [147, 112],
             finalPos: [379, 145],
             startPos: [-147, -112],
             trumpet: {
-                texture: './textures/truba_mashiny.png',
+                texture: texturesPath + 'truba_mashiny.png',
                 size: [62, 82],
                 pos: [363, 192]
             }
@@ -108,42 +108,42 @@ function OILGame(settings) {
 
         factory: [
             {
-                url_inactive: './textures/zavod1_ne_rabotaet.png',
-                url_active: './textures/zavod1.png',
+                url_inactive: texturesPath + 'zavod1_ne_rabotaet.png',
+                url_active: texturesPath + 'zavod1.png',
                 size: [235, 181],
                 position: [464, 27],
                 hit: [13, 82, 14, 32, 77, 17, 104, 25, 152, 13, 222, 32, 222, 127, 90, 173, 30, 149, 30, 135, 57, 129, 57, 103],
                 trumpet: {
-                    url_fixed: './textures/truba11.png',
-                    url_broken: './textures/truba1.png',
+                    url_fixed: texturesPath + 'truba11.png',
+                    url_broken: texturesPath + 'truba1.png',
                     // hit: [2, 15, 3, 2, 23, 1, 49, 12, 66, 28, 70, 36, 70, 82, 79, 87, 75, 95, 56, 99, 36, 95, 31, 90, 36, 84, 42, 82, 42, 41, 32, 27, 20, 18],
                     size: [90, 114],
                     position: [641, 109]
                 }
             },
             {
-                url_inactive: './textures/zavod2_ne_rabotaet.png',
-                url_active: './textures/zavod2.png',
+                url_inactive: texturesPath + 'zavod2_ne_rabotaet.png',
+                url_active: texturesPath + 'zavod2.png',
                 size: [248, 210],
                 hit: [[7, 120], [121, 91], [134, 42], [211, 57], [212, 150], [198, 166], [80, 207], [6, 172]],
                 position: [30, 80],
                 trumpet: {
-                    url_fixed: './textures/truba2.png',
-                    url_broken: './textures/truba22.png',
+                    url_fixed: texturesPath + 'truba2.png',
+                    url_broken: texturesPath + 'truba22.png',
                     // hit: [1, 12, 4, 1, 23, 1, 50, 13, 67, 30, 69, 37, 69, 80, 79, 86, 80, 93, 70, 103, 46, 105, 30, 97, 29, 96, 29, 88, 36, 81, 40, 79, 41, 39, 31, 25],
                     size: [112, 117],
                     position: [180, 230]
                 }
             },
             {
-                url_inactive: './textures/zavod3_ne_rabotaet.png',
-                url_active: './textures/zavod3.png',
+                url_inactive: texturesPath + 'zavod3_ne_rabotaet.png',
+                url_active: texturesPath + 'zavod3.png',
                 size: [233, 266],
                 position: [564, 647],
                 hit: [16, 223, 16, 174, 70, 159, 77, 68, 108, 68, 113, 124, 161, 112, 220, 135, 219, 211, 163, 230, 144, 220, 145, 236, 85, 256],
                 trumpet: {
-                    url_fixed: './textures/truba3.png',
-                    url_broken: './textures/truba33.png',
+                    url_fixed: texturesPath + 'truba3.png',
+                    url_broken: texturesPath + 'truba33.png',
                     hit: [0, 125, 33, 34, 120, 45, 135, 110, 85, 133],
                     // hit: [26, 121, 34, 113, 36, 113, 36, 64, 48, 47, 68, 39, 94, 40, 118, 54, 126, 69, 128, 114, 110, 116, 108, 83, 103, 70, 91, 65, 74, 65, 65, 70, 65, 112, 73, 118, 64, 128, 43, 128],
                     size: [143, 158],
@@ -151,14 +151,14 @@ function OILGame(settings) {
                 }
             },
             {
-                url_inactive: './textures/zavod4_ne_rabotaet.png',
-                url_active: './textures/zavod4.png',
+                url_inactive: texturesPath + 'zavod4_ne_rabotaet.png',
+                url_active: texturesPath + 'zavod4.png',
                 size: [261, 225],
                 position: [308, 783],
                 hit: [6, 161, 7, 107, 28, 101, 29, 92, 58, 85, 59, 42, 119, 31, 122, 82, 253, 115, 252, 136, 202, 154, 229, 161, 230, 184, 153, 217, 92, 192, 82, 196],
                 trumpet: {
-                    url_fixed: './textures/truba4.png',
-                    url_broken: './textures/truba44.png',
+                    url_fixed: texturesPath + 'truba4.png',
+                    url_broken: texturesPath + 'truba44.png',
                     hit: [0, 125, 33, 34, 120, 45, 135, 110, 85, 133],
                     // hit: [26, 121, 34, 113, 36, 113, 36, 64, 48, 47, 68, 39, 94, 40, 118, 54, 126, 69, 128, 114, 110, 116, 108, 83, 103, 70, 91, 65, 74, 65, 65, 70, 65, 112, 73, 118, 64, 128, 43, 128],
                     size: [143, 158],
@@ -1127,7 +1127,7 @@ const SETTINGS = {
     reopenTrumpetDelayTo: 5
 }
 
-OILGame(SETTINGS).onShare = console.log;
+OILGame(SETTINGS, './textures/').onShare = console.log;
 
 // const SETTINGS_DESCRIPTION = {
 //     badCountToLose: 'Сколько пропустить плохих, чтобы проиграть',
