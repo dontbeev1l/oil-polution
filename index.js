@@ -559,7 +559,7 @@ function OILGame(settings, texturesPath) {
             const fishSprite = PIXI.Sprite.from(this.currentTextures.fishIcon.url);
 
             const rubbishText = new PIXI.Text(`${Math.round(badcount / badCountToLose * 100)}%`, textStyle);
-            const fishText = new PIXI.Text(`${(fishCountToLose - fishCount) / fishCountToLose * 100}%`, textStyle);
+            const fishText = new PIXI.Text(`${Math.round((fishCountToLose - fishCount) / fishCountToLose * 100)}%`, textStyle);
 
             [rubbishSprite, fishSprite, rubbishText, fishText].forEach((s) => s.zIndex = 4000);
 
@@ -633,14 +633,14 @@ function OILGame(settings, texturesPath) {
             fbSprite.on('pointerdown', () => {
                 this.onShare('fb', {
                     badcount, badCountToLose, fishCount, fishCountToLose, rubbishText: `${Math.round(badcount / badCountToLose * 100)}%`,
-                    fishText: `${(fishCountToLose - fishCount) / fishCountToLose * 100}%`
+                    fishText: `${Math.round((fishCountToLose - fishCount) / fishCountToLose * 100)}%`
                 });
             })
 
             vkSprite.on('pointerdown', () => {
                 this.onShare('vk', {
                     badcount, badCountToLose, fishCount, fishCountToLose, rubbishText: `${Math.round(badcount / badCountToLose * 100)}%`,
-                    fishText: `${(fishCountToLose - fishCount) / fishCountToLose * 100}%`
+                    fishText: `${Math.round((fishCountToLose - fishCount) / fishCountToLose * 100)}%`
                 });
             })
 
