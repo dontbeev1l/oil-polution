@@ -843,10 +843,13 @@ function OILGame(settings, texturesPath) {
 
                 timeout = setTimeout(() => {
                     if (!oil._destroyed) {
+                        try {
+                            oil.destroy({ children: true, texture: false, baseTexture: false });
+                        } catch (e) { console.warn('Destroing oil error', e) }
+
                         oil.interactive = false;
                         badcount++;
                         updateStat();
-                        oil.destroy({ children: true, texture: false, baseTexture: false });
                         RENDERED_POINTS.splice(RENDERED_POINTS.indexOf(point), 1);
                     }
                 }, this.settings.badItemActiveTime)
