@@ -2,7 +2,7 @@
 
 
 
-function OILGame(settings, texturesPath) {
+function OILGame(settings, texturesPath, maxHeight) {
     const TEXTURE_PACK_1 = {
         vk: texturesPath + 'vk.svg',
         fb: texturesPath + 'fb.png',
@@ -440,7 +440,18 @@ function OILGame(settings, texturesPath) {
             this._container = container;
             this._canvas = canvas;
 
-            const height = this.calculateByPropotrion(this.containerWidth(), this.currentTextures.background.size[0], this.currentTextures.background.size[1]);
+            let height = this.calculateByPropotrion(this.containerWidth(), this.currentTextures.background.size[0], this.currentTextures.background.size[1]);
+            const maxHeightValue = maxHeight(window.innerHeight);
+            if (height > maxHeightValue) {
+                height = maxHeightValue;
+                let width = this.calculateByPropotrion(height, this.currentTextures.background.size[1], this.currentTextures.background.size[0]);
+
+                this._container.style.height = `${height}px`
+                this._container.style.width = `${width}px`
+            } else {
+                this._container.style.height = `${height}px`
+                this._container.style.width = `${this.containerWidth()}px`
+            }
 
             this.pixiApp = new PIXI.Application({
                 view: canvas,
@@ -449,7 +460,6 @@ function OILGame(settings, texturesPath) {
                 height: height * 2
             });
 
-            this._container.style.height = `${height}px`
 
             this.bgSprite = PIXI.Sprite.from(this.currentTextures.background.url);
             this.normilizebgSize();
