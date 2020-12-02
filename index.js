@@ -605,47 +605,47 @@ function OILGame(settings, texturesPath) {
             fishSprite.y = rubbishSprite.y;
             fishText.y = fishSprite.y + (fishSprite.height - fishText.height) / 2;
 
-            const vkSprite = PIXI.Sprite.from(this.currentTextures.vk);
-            const fbSprite = PIXI.Sprite.from(this.currentTextures.fb);
+            // const vkSprite = PIXI.Sprite.from(this.currentTextures.vk);
+            // const fbSprite = PIXI.Sprite.from(this.currentTextures.fb);
 
-            const SOC_SPRITE_SIZE = 70;
-            vkSprite.width = SOC_SPRITE_SIZE * this.scaleCoef();
-            vkSprite.height = SOC_SPRITE_SIZE * this.scaleCoef();
-            fbSprite.width = SOC_SPRITE_SIZE * this.scaleCoef();
-            fbSprite.height = SOC_SPRITE_SIZE * this.scaleCoef();
-
-
-            vkSprite.y = text.y + text.height + 15 + 3 * margin + rubbishText.height + 48 + 100 * this.scaleCoef();
-            fbSprite.y = vkSprite.y;
-            vkSprite.x = this.pixiApp.renderer.width / 2 - vkSprite.width - margin / 2;
-            fbSprite.x = this.pixiApp.renderer.width / 2 + margin / 2;
-
-            vkSprite.zIndex = 3000;
-            fbSprite.zIndex = 3000;
-
-            this.pixiApp.stage.addChild(vkSprite);
-            this.pixiApp.stage.addChild(fbSprite);
-
-            fbSprite.interactive = true;
-            vkSprite.interactive = true;
+            // const SOC_SPRITE_SIZE = 70;
+            // vkSprite.width = SOC_SPRITE_SIZE * this.scaleCoef();
+            // vkSprite.height = SOC_SPRITE_SIZE * this.scaleCoef();
+            // fbSprite.width = SOC_SPRITE_SIZE * this.scaleCoef();
+            // fbSprite.height = SOC_SPRITE_SIZE * this.scaleCoef();
 
 
-            fbSprite.on('pointerdown', () => {
-                this.onShare('fb', {
-                    badcount, badCountToLose, fishCount, fishCountToLose, rubbishText: `${Math.round(badcount / badCountToLose * 100)}%`,
-                    fishText: `${Math.round((fishCountToLose - fishCount) / fishCountToLose * 100)}%`
-                });
-            })
+            // vkSprite.y = text.y + text.height + 15 + 3 * margin + rubbishText.height + 48 + 100 * this.scaleCoef();
+            // fbSprite.y = vkSprite.y;
+            // vkSprite.x = this.pixiApp.renderer.width / 2 - vkSprite.width - margin / 2;
+            // fbSprite.x = this.pixiApp.renderer.width / 2 + margin / 2;
 
-            vkSprite.on('pointerdown', () => {
-                this.onShare('vk', {
-                    badcount, badCountToLose, fishCount, fishCountToLose, rubbishText: `${Math.round(badcount / badCountToLose * 100)}%`,
-                    fishText: `${Math.round((fishCountToLose - fishCount) / fishCountToLose * 100)}%`
-                });
-            })
+            // vkSprite.zIndex = 3000;
+            // fbSprite.zIndex = 3000;
+
+            // this.pixiApp.stage.addChild(vkSprite);
+            // this.pixiApp.stage.addChild(fbSprite);
+
+            // fbSprite.interactive = true;
+            // vkSprite.interactive = true;
+
+
+            // fbSprite.on('pointerdown', () => {
+            //     this.onShare('fb', {
+            //         badcount, badCountToLose, fishCount, fishCountToLose, rubbishText: `${Math.round(badcount / badCountToLose * 100)}%`,
+            //         fishText: `${Math.round((fishCountToLose - fishCount) / fishCountToLose * 100)}%`
+            //     });
+            // })
+
+            // vkSprite.on('pointerdown', () => {
+            //     this.onShare('vk', {
+            //         badcount, badCountToLose, fishCount, fishCountToLose, rubbishText: `${Math.round(badcount / badCountToLose * 100)}%`,
+            //         fishText: `${Math.round((fishCountToLose - fishCount) / fishCountToLose * 100)}%`
+            //     });
+            // })
 
             this.renderMenu('ЕЩЕ РАЗ', text.y + text.height + 15 + 3 * margin + rubbishText.height,
-                () => { [rubbishSprite, rubbishText, fishSprite, fishText, text, vkSprite, fbSprite].forEach(S => S.destroy({})) })
+                () => { [rubbishSprite, rubbishText, fishSprite, fishText, text].forEach(S => S.destroy({})) })
         }
 
         startGame() {
