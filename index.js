@@ -469,16 +469,16 @@ function OILGame(settings, texturesPath, maxHeight) {
             this.pixiApp.stage.sortableChildren = true;
 
 
-            this.onContainerResize((event) => {
-                const height = this.calculateByPropotrion(event.width, this.currentTextures.background.size[0], this.currentTextures.background.size[1])
+            // this.onContainerResize((event) => {
+            //     const height = this.calculateByPropotrion(event.width, this.currentTextures.background.size[0], this.currentTextures.background.size[1])
 
-                this.pixiApp.renderer.resize(
-                    event.width,
-                    height
-                );
-                this._container.style.height = `${height}px`
-                this.normilizebgSize();
-            });
+            //     this.pixiApp.renderer.resize(
+            //         event.width,
+            //         height
+            //     );
+            //     this._container.style.height = `${height}px`
+            //     this.normilizebgSize();
+            // });
             this.renderMenu();
             // this.debugRiverArea(this.currentTextures.riverPath);
         }
@@ -1011,16 +1011,16 @@ function OILGame(settings, texturesPath, maxHeight) {
         }
 
         onContainerResize(callback) {
-            this._containerWidth = this._container.getBoundingClientRect().width;
-            const check = () => {
-                const currentWidth = this._container.getBoundingClientRect().width;
-                if (currentWidth !== this._containerWidth) {
-                    callback({ width: currentWidth, prevWidth: this._containerWidth });
-                    this._containerWidth = currentWidth;
-                }
-                requestAnimationFrame(check);
-            }
-            check();
+            // this._containerWidth = this._container.getBoundingClientRect().width;
+            // const check = () => {
+            //     const currentWidth = this._container.getBoundingClientRect().width;
+            //     if (currentWidth !== this._containerWidth) {
+            //         callback({ width: currentWidth, prevWidth: this._containerWidth });
+            //         this._containerWidth = currentWidth;
+            //     }
+            //     requestAnimationFrame(check);
+            // }
+            // check();
         }
 
     }
